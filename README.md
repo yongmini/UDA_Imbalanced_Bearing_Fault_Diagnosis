@@ -187,6 +187,7 @@ Your support in citing our project when used in your research is highly apprecia
 
 ```
 
+```latex
 @misc{Zhao2019,
 author = {Zhibin Zhao and Qiyang Zhang and Xiaolei Yu and Chuang Sun and Shibin Wang and Ruqiang Yan and Xuefeng Chen},
 title = {Unsupervised Deep Transfer Learning for Intelligent Fault Diagnosis},
