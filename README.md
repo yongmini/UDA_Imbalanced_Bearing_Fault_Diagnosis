@@ -7,6 +7,8 @@ This repository contains code that applies DA, UDA, and DG methodologies for fau
 
 It is planned to be updated step by step.
 
+If there are any errors or incorrect code, please let me know.
+
 This repository contains the implementation details of our paper: [IEEE Transactions on Instrumentation and Measurement] **[Applications of Unsupervised Deep Transfer Learning to Intelligent Fault Diagnosis: A Survey and Comparative Study](https://ieeexplore.ieee.org/document/9552620)** by [Zhibin Zhao](https://zhaozhibin.github.io/), Qiyang Zhang, and Xiaolei Yu.
 The methods about multi-domain TL can be found in (https://github.com/zhanghuanwang1/UDTL_multi_domain)
 ## Correction
