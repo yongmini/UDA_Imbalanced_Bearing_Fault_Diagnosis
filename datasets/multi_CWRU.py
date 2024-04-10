@@ -29,7 +29,7 @@ axis = ["_DE_time", "_FE_time", "_BA_time"]
 
 label = [i for i in range(0, 10)]
 
-def get_files(root, N):
+def get_files(root, N,source=True):
     '''
     This function is used to generate the final training set and test set.
     root:The location of the data set
@@ -37,13 +37,19 @@ def get_files(root, N):
     data = []
     lab =[]
     for k in range(len(N)):
+        if source:
+            
+            print("Loading data from source dataset: ", N[k])
+            
+        else:
+            print("Loading data from target dataset: ", N[k])  
         for n in tqdm(range(len(dataname[N[k]]))):
             if n==0:
                path1 =os.path.join(root,datasetname[3], dataname[N[k]][n])
             else:
                 path1 = os.path.join(root,datasetname[0], dataname[N[k]][n])
             data1, lab1 = data_load(path1,dataname[N[k]][n],label=label_mapping[label[n]])
-            lab1=k*100+np.array(lab1)#k是域标签,lab1代表的是类标签
+            lab1=k*100+np.array(lab1)
             lab1=lab1.tolist()
             data += data1
             lab +=lab1
@@ -113,14 +119,14 @@ class multi_CWRU(object):
     def data_split(self, transfer_learning=True):
         if transfer_learning:
             # get source train and val
-            list_data = get_files(self.data_dir, self.source_N)
+            list_data = get_files(self.data_dir, self.source_N,source=True)
             data_pd = pd.DataFrame({"data": list_data[0], "label": list_data[1]})
             train_pd, val_pd = train_test_split(data_pd, test_size=0.2, random_state=40, stratify=data_pd["label"])
             source_train = dataset(list_data=train_pd, transform=self.data_transforms['train'])
             source_val = dataset(list_data=val_pd, transform=self.data_transforms['val'])
 
             # get target train and val
-            list_data = get_files(self.data_dir, self.target_N)
+            list_data = get_files(self.data_dir, self.target_N,source=False)
             data_pd = pd.DataFrame({"data": list_data[0], "label": list_data[1]})
             train_pd, val_pd = train_test_split(data_pd, test_size=0.2, random_state=40, stratify=data_pd["label"])
             target_train = dataset(list_data=train_pd, transform=self.data_transforms['train'])

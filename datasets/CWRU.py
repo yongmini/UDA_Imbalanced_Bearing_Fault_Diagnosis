@@ -31,7 +31,7 @@ axis = ["_DE_time", "_FE_time", "_BA_time"]
 
 label = [i for i in range(0, 10)]
 
-def get_files(root, N):
+def get_files(root, N,source=True):
     '''
     This function is used to generate the final training set and test set.
     root:The location of the data set
@@ -39,6 +39,12 @@ def get_files(root, N):
     data = []
     lab =[]
     for k in range(len(N)):
+        if source:
+            
+            print("Loading data from source dataset: ", N[k])
+            
+        else:
+            print("Loading data from target dataset: ", N[k])    
         for n in tqdm(range(len(dataname[N[k]]))):
             if n==0:
                path1 =os.path.join(root,datasetname[3], dataname[N[k]][n])
@@ -114,7 +120,7 @@ class CWRU(object):
     def data_split(self, transfer_learning=True, imbalance_ratio=None):
         if transfer_learning:
             # get source train and val
-            list_data = get_files(self.data_dir, self.source_N)
+            list_data = get_files(self.data_dir, self.source_N,source=True)
             data_pd = pd.DataFrame({"data": list_data[0], "label": list_data[1]})
             
             data_pd = balance_data(data_pd) 
@@ -125,7 +131,6 @@ class CWRU(object):
             
             # Table for source data distribution
             source_counts = pd.concat([train_pd['label'].value_counts(), val_pd['label'].value_counts()], axis=1, keys=['Train', 'Validation'])
-            print(source_counts)
             source_counts.sort_index(inplace=True)
             source_counts.loc['Dataset Size'] = [len(source_train), len(source_val)]
             print("Source Data Distribution:")
@@ -133,7 +138,7 @@ class CWRU(object):
 
             
             # get target data and split into train and val
-            list_data = get_files(self.data_dir, self.target_N)
+            list_data = get_files(self.data_dir, self.target_N,source=False)
             data_pd = pd.DataFrame({"data": list_data[0], "label": list_data[1]})
                         
             data_pd = balance_data(data_pd) 
