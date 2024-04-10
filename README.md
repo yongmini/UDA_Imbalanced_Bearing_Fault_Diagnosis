@@ -2,7 +2,9 @@
 
 ## Overview
 
-This repository contains code that applies DA, UDA, and DG methodologies for fault diagnosis of rotating machinery.
+This repository contains code that applies UDA (Unsupervised Domain Adaptation), and DG (Domain Generalization) methodologies for fault diagnosis of rotating machinery.
+
+Please be aware that I have referred to two repositories, which are cited below.
 
 It is planned to be updated step by step.
 
