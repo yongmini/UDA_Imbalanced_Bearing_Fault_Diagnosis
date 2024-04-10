@@ -57,9 +57,9 @@ This repository is organized as:
 
 - use the train_advanced.py to test (mapping-based DTL and adversarial-based DTL)
 - for example, use the following commands to test DANN for CWRU with the transfer_task 0-->1
-- `python train_advanced.py --data_name CWRU --data_dir D:/Data --transfer_task [0],[1]  --last_batch "" --distance_metric "" --domain_adversarial True --adversarial_loss DA`
+- `python train_advanced.py --data_name CWRU --data_dir D:/Data --transfer_task [0],[1] --method "DA"  --last_batch "" --distance_metric "" --domain_adversarial True --adversarial_loss DA`
 - for example, use the following commands to test MK-MMD for CWRU with the transfer_task 0-->1
-- `python train_advanced.py --data_name CWRU --data_dir D:/Data --transfer_task [0],[1] --last_batch True --distance_metric True --distance_loss MK-MMD --domain_adversarial "" `
+- `python train_advanced.py --data_name CWRU --data_dir D:/Data --transfer_task [0],[1] --method "DA" --last_batch True --distance_metric True --distance_loss MK-MMD --domain_adversarial "" `
 
 - Multi DA and DG will be updated.
 
