@@ -33,14 +33,14 @@ def parse_args():
     
     
      
-    parser.add_argument('--method', type=str, default='multiDA',choices=['DG', 'multiDA','DA','base'], help='the name of the method')
+    parser.add_argument('--method', type=str, default='DA',choices=['DG', 'multiDA','DA','base'], help='the name of the method')
     parser.add_argument('--model_name', type=str, default='cnn_features_1d', help='the name of the model')
-    parser.add_argument('--data_name', type=str, default='multi_CWRU',choices=['CWRU', 'multi_CWRU','JNU','multi_JNU'] ,help='the name of the data')
+    parser.add_argument('--data_name', type=str, default='CWRU',choices=['CWRU', 'multi_CWRU','JNU','multi_JNU'] ,help='the name of the data')
     
     
     parser.add_argument('--data_dir', type=str, default='/home/workspace/UDA_Bearing_Fault_Diagnosis/Data', help='the directory of the data')
 
-    parser.add_argument('--transfer_task', type=list, default=[[1,2], [0]], help='DG, Multi-DA tasks')
+    parser.add_argument('--transfer_task', type=list, default=[[1], [0]], help='DG, Multi-DA tasks')
     #parser.add_argument('--transfer_task', type=list, default=[[1], [0]], help='DA tasks')
     parser.add_argument('--normlizetype', type=str, default='mean-std', help='nomalization type')
 
@@ -54,15 +54,15 @@ def parse_args():
     parser.add_argument('--cuda_device', type=str, default='0', help='assign device')
     parser.add_argument('--checkpoint_dir', type=str, default='./checkpoint', help='the directory to save the model')
     parser.add_argument("--pretrained", type=bool, default=False, help='whether to load the pretrained model')
-    parser.add_argument('--batch_size', type=int, default=64, help='batchsize of the training process')
+    parser.add_argument('--batch_size', type=int, default=32, help='batchsize of the training process')
     parser.add_argument('--num_workers', type=int, default=0, help='the number of training process')
 
     parser.add_argument('--bottleneck', type=bool, default=True, help='whether using the bottleneck layer')
     parser.add_argument('--bottleneck_num', type=int, default=256, help='whether using the bottleneck layer')
-    parser.add_argument('--last_batch', type=bool, default=False, help='whether using the last batch')
+    parser.add_argument('--last_batch', type=bool, default=True, help='whether using the last batch')
 
     #
-    parser.add_argument('--distance_metric', type=bool, default=False, help='whether use distance metric')
+    parser.add_argument('--distance_metric', type=bool, default=True, help='whether use distance metric')
     parser.add_argument('--distance_loss', type=str, choices=['MK-MMD', 'JMMD', 'CORAL'], default='MK-MMD', help='which distance loss you use')
     parser.add_argument('--trade_off_distance', type=str, default='Step', help='')
     parser.add_argument('--lam_distance', type=float, default=1, help='this is used for Cons')

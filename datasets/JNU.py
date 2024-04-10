@@ -56,6 +56,14 @@ def data_load(filename,label):
 
     return data, lab
 
+def balance_data(data_pd):
+    count = data_pd.value_counts(subset='label')
+    min_len = min(count) - 1
+    df = pd.DataFrame(columns=('data', 'label'))
+    for i in count.keys():
+        data_pd_tmp = data_pd[data_pd['label'] == i].reset_index(drop=True)
+        df = pd.concat([df, data_pd_tmp.loc[:min_len, ['data', 'label']]], ignore_index=True)
+    return df
 #--------------------------------------------------------------------------------------------------------------------
 class JNU(object):
     num_classes = 4
@@ -85,35 +93,74 @@ class JNU(object):
             ])
         }
 
-    def data_split(self, transfer_learning=True):
+
+    def data_split(self, transfer_learning=True, imbalance_ratio=None):
         if transfer_learning:
             # get source train and val
             list_data = get_files(self.data_dir, self.source_N)
             data_pd = pd.DataFrame({"data": list_data[0], "label": list_data[1]})
+            
+            data_pd = balance_data(data_pd) 
+            
             train_pd, val_pd = train_test_split(data_pd, test_size=0.2, random_state=40, stratify=data_pd["label"])
             source_train = dataset(list_data=train_pd, transform=self.data_transforms['train'])
             source_val = dataset(list_data=val_pd, transform=self.data_transforms['val'])
-
-            # get target train and val
+            
+            print("Source Train Label Counts:")
+            print(train_pd['label'].value_counts())
+            print("Source Validation Label Counts:")
+            print(val_pd['label'].value_counts())   
+            
+            
+            # get target data and split into train and val
             list_data = get_files(self.data_dir, self.target_N)
             data_pd = pd.DataFrame({"data": list_data[0], "label": list_data[1]})
+                        
+            data_pd = balance_data(data_pd) 
             train_pd, val_pd = train_test_split(data_pd, test_size=0.2, random_state=40, stratify=data_pd["label"])
+
+            # apply imbalance_ratio to target_train
+            if imbalance_ratio is not None:
+                train_data = []
+                train_labels = []
+                for label, ratio in imbalance_ratio.items():
+                    if label == 0:  # Assume label 0 is normal class
+                        train_data += train_pd[train_pd["label"] == label]["data"].tolist()
+                        train_labels += train_pd[train_pd["label"] == label]["label"].tolist()
+                    else:
+                        num_samples = int(len(train_pd[train_pd["label"] == label]) * ratio)
+                        train_data += train_pd[train_pd["label"] == label]["data"].tolist()[:num_samples]
+                        train_labels += train_pd[train_pd["label"] == label]["label"].tolist()[:num_samples]
+                train_pd = pd.DataFrame({"data": train_data, "label": train_labels})
+
             target_train = dataset(list_data=train_pd, transform=self.data_transforms['train'])
             target_val = dataset(list_data=val_pd, transform=self.data_transforms['val'])
+
+     
+            print("Target Train Label Counts:")
+            print(train_pd['label'].value_counts())
+            print("Target Validation Label Counts:")
+            print(val_pd['label'].value_counts())
+            
+            print("Source Train Dataset Size:", len(source_train))
+            print("Source Validation Dataset Size:", len(source_val))
+            print("Target Train Dataset Size:", len(target_train))
+            print("Target Validation Dataset Size:", len(target_val))
+
             return source_train, source_val, target_train, target_val
         else:
-            #get source train and val
+            # get source train and val
             list_data = get_files(self.data_dir, self.source_N)
             data_pd = pd.DataFrame({"data": list_data[0], "label": list_data[1]})
+            data_pd = balance_data(data_pd) 
             train_pd, val_pd = train_test_split(data_pd, test_size=0.2, random_state=40, stratify=data_pd["label"])
             source_train = dataset(list_data=train_pd, transform=self.data_transforms['train'])
             source_val = dataset(list_data=val_pd, transform=self.data_transforms['val'])
 
-            # get target train and val
+            # get target val
             list_data = get_files(self.data_dir, self.target_N)
             data_pd = pd.DataFrame({"data": list_data[0], "label": list_data[1]})
+            data_pd = balance_data(data_pd) 
             target_val = dataset(list_data=data_pd, transform=self.data_transforms['val'])
+
             return source_train, source_val, target_val
-
-
-

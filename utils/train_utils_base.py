@@ -53,7 +53,7 @@ class train_utils(object):
            args.transfer_task = eval("".join(args.transfer_task))
 
 
-        self.datasets['source_train'], self.datasets['source_val'], self.datasets['target_val'] = Dataset(args.data_dir, args.transfer_task, args.normlizetype).data_split(transfer_learning=False)
+        self.datasets['source_train'], self.datasets['source_val'], self.datasets['target_val'] = Dataset(args.data_dir, args.transfer_task, args.normlizetype).data_split(transfer_learning=True)
         self.dataloaders = {x: torch.utils.data.DataLoader(self.datasets[x], batch_size=args.batch_size,
                                                            shuffle=(True if x.split('_')[1] == 'train' else False),
                                                            num_workers=args.num_workers,
@@ -245,8 +245,8 @@ class train_utils(object):
                     if epoch_acc > best_acc or epoch > args.max_epoch-2:
                         best_acc = epoch_acc
                         logging.info("save best model epoch {}, acc {:.4f}".format(epoch, epoch_acc))
-                        torch.save(model_state_dic,
-                                   os.path.join(self.save_dir, '{}-{:.4f}-best_model.pth'.format(epoch, best_acc)))
+                        # torch.save(model_state_dic,
+                        #            os.path.join(self.save_dir, '{}-{:.4f}-best_model.pth'.format(epoch, best_acc)))
 
 
             if self.lr_scheduler is not None:

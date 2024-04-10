@@ -50,8 +50,8 @@ class train_utils(object):
         if isinstance(args.transfer_task[0], str):
            #print(args.transfer_task)
            args.transfer_task = eval("".join(args.transfer_task))
-        self.datasets['source_train'], self.datasets['source_val'], self.datasets['target_train'], self.datasets['target_val'] = Dataset(args.data_dir, args.transfer_task, args.normlizetype).data_split(transfer_learning=True)
-
+        self.datasets['source_train'], self.datasets['source_val'], self.datasets['target_train'], self.datasets['target_val'] = Dataset(args.data_dir, args.transfer_task, args.normlizetype).data_split(transfer_learning=True,imbalance_ratio={0:1,1: 0.1, 2: 0.1, 3: 0.1,4: 0.1})
+#{0:1,1: 0.1, 2: 0.1, 3: 0.1,4: 0.1,5: 0.1,6: 0.1,7: 0.1,8: 0.1,9: 0.1}
 
         self.dataloaders = {x: torch.utils.data.DataLoader(self.datasets[x], batch_size=args.batch_size,
                                                            shuffle=(True if x.split('_')[1] == 'train' else False),
