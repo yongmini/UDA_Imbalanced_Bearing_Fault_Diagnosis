@@ -10,14 +10,15 @@ from tqdm import tqdm
 
 #Digital data was collected at 12,000 samples per second
 signal_size = 1024
-
 dataname= {0:["97.mat","105.mat", "118.mat", "130.mat", "169.mat", "185.mat", "197.mat", "209.mat", "222.mat","234.mat"],  # 1797rpm
            1:["98.mat","106.mat", "119.mat", "131.mat", "170.mat", "186.mat", "198.mat", "210.mat", "223.mat","235.mat"],  # 1772rpm
            2:["99.mat","107.mat", "120.mat", "132.mat", "171.mat", "187.mat", "199.mat", "211.mat", "224.mat","236.mat"],  # 1750rpm
            3:["100.mat","108.mat", "121.mat","133.mat", "172.mat", "188.mat", "200.mat", "212.mat", "225.mat","237.mat"]}  # 1730rpm
+#12kdrive       noraml     ir007        b007       or007(6)        ir014      b014          or014(6)        ir021        b021      or021(6)
+ 
 
-datasetname = ["12k Drive End Bearing Fault Data", "12k Fan End Bearing Fault Data", "48k Drive End Bearing Fault Data",
-               "Normal Baseline Data"]
+datasetname = ["12k_Drive_End_Bearing_Fault_Data", "12k_Fan_End_Bearing_Fault_Data", "48k_Drive_End_Bearing_Fault_Data",
+               "Normal_Baseline_Data"]
 axis = ["_DE_time", "_FE_time", "_BA_time"]
 
 label = [i for i in range(0, 10)]
@@ -36,9 +37,10 @@ def get_files(root, N):
             else:
                 path1 = os.path.join(root,datasetname[0], dataname[N[k]][n])
             data1, lab1 = data_load(path1,dataname[N[k]][n],label=label[n])
+            lab1=k*100+np.array(lab1)#k是域标签,lab1代表的是类标签
+            lab1=lab1.tolist()
             data += data1
             lab +=lab1
-
     return [data, lab]
 
 
@@ -54,17 +56,11 @@ def data_load(filename, axisname, label):
     else:
         realaxis = "X" + datanumber[0] + axis[0]
     fl = loadmat(filename)[realaxis]
-    fl = fl.reshape(-1,)
     data = []
     lab = []
     start, end = 0, signal_size
     while end <= fl.shape[0]:
-        x = fl[start:end]
-        x = np.fft.fft(x)
-        x = np.abs(x) / len(x)
-        x = x[range(int(x.shape[0] / 2))]
-        x = x.reshape(-1,1)
-        data.append(x)
+        data.append(fl[start:end])
         lab.append(label)
         start += signal_size
         end += signal_size
@@ -72,12 +68,13 @@ def data_load(filename, axisname, label):
     return data, lab
 
 #--------------------------------------------------------------------------------------------------------------------
-class CWRUFFT(object):
+class multi_CWRU(object):
     num_classes = 10
     inputchannel = 1
     def __init__(self, data_dir, transfer_task, normlizetype="0-1"):
-        self.data_dir = data_dir
+        self.data_dir = data_dir+"/CWRU"
         self.source_N = transfer_task[0]
+        print('self.source_N',self.source_N)
         self.target_N = transfer_task[1]
         self.normlizetype = normlizetype
         self.data_transforms = {

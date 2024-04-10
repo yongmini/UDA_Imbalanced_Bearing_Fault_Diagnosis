@@ -62,7 +62,7 @@ class JNU(object):
     inputchannel = 1
 
     def __init__(self, data_dir, transfer_task, normlizetype="0-1"):
-        self.data_dir = data_dir
+        self.data_dir = data_dir+"/JNU"
         self.source_N = transfer_task[0]
         self.target_N = transfer_task[1]
         self.normlizetype = normlizetype

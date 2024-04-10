@@ -6,9 +6,13 @@ import os
 from datetime import datetime
 from utils.logger import setlogger
 import logging
-from utils.train_utils_combines import train_utils
+from utils.train_utils_base import train_utils as train_utils_base
 import torch
 import warnings
+from utils.train_utils_combines import train_utils
+from utils.train_utils_multiDG import train_utils as train_utils_DG
+from utils.train_utils_multiDA import train_utils as train_utils_DA
+
 print(torch.__version__)
 warnings.filterwarnings('ignore')
 
@@ -17,11 +21,25 @@ args = None
 def parse_args():
     parser = argparse.ArgumentParser(description='Train')
     # model and data parameters
+    
+    
+     
+    parser.add_argument('--method', type=str, default='multiDA',choices=['DG', 'multiDA','DA','base'], help='the name of the method')
     parser.add_argument('--model_name', type=str, default='cnn_features_1d', help='the name of the model')
-    parser.add_argument('--data_name', type=str, default='PHMFFT', help='the name of the data')
+    parser.add_argument('--data_name', type=str, default='multi_CWRU',choices=['CWRU', 'multi_CWRU','JNU','multi_JNU'] ,help='the name of the data')
+    
+    
     parser.add_argument('--data_dir', type=str, default='/home/workspace/UDA_Bearing_Fault_Diagnosis/Data', help='the directory of the data')
-    parser.add_argument('--transfer_task', type=list, default=[[0], [3]], help='transfer learning tasks')
+
+    parser.add_argument('--transfer_task', type=list, default=[[1,2], [0]], help='DG, Multi-DA tasks')
+    #parser.add_argument('--transfer_task', type=list, default=[[1], [0]], help='DA tasks')
     parser.add_argument('--normlizetype', type=str, default='mean-std', help='nomalization type')
+
+
+    # adabn parameters
+    parser.add_argument('--adabn', type=bool, default=False, help='whether using adabn')
+    parser.add_argument('--eval_all', type=bool, default=False, help='whether using all samples to update the results')
+    parser.add_argument('--adabn_epochs', type=int, default=3, help='the number of training process')
 
     # training parameters
     parser.add_argument('--cuda_device', type=str, default='0', help='assign device')
@@ -40,7 +58,7 @@ def parse_args():
     parser.add_argument('--trade_off_distance', type=str, default='Step', help='')
     parser.add_argument('--lam_distance', type=float, default=1, help='this is used for Cons')
     #
-    parser.add_argument('--domain_adversarial', type=bool, default=True, help='whether use domain_adversarial')
+    parser.add_argument('--domain_adversarial', type=bool, default=False, help='whether use domain_adversarial')
     parser.add_argument('--adversarial_loss', type=str, choices=['DA', 'CDA', 'CDA+E'], default='CDA+E', help='which adversarial loss you use')
     parser.add_argument('--hidden_size', type=int, default=1024, help='whether using the last batch')
     parser.add_argument('--trade_off_adversarial', type=str, default='Step', help='')
@@ -81,7 +99,19 @@ if __name__ == '__main__':
     for k, v in args.__dict__.items():
         logging.info("{}: {}".format(k, v))
 
-    trainer = train_utils(args, save_dir)
+    if args.method=='DG':
+        trainer = train_utils_DG(args, save_dir)
+    elif args.method=='multiDA':
+        trainer = train_utils_DA(args, save_dir)
+    elif args.method=='DA':
+        trainer = train_utils(args, save_dir)
+    elif args.method=='base':
+        args.model_name = 'CNN_1d'
+        trainer = train_utils_base(args, save_dir)
+    else:
+        raise('The method does not exist.')
+
+    
     trainer.setup()
     trainer.train()
 

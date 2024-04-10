@@ -10,16 +10,17 @@ from tqdm import tqdm
 
 #Digital data was collected at 12,000 samples per second
 signal_size = 1024
-dataname= {0:["97.mat","105_0.mat", "118_0.mat", "130@6_0.mat", "169_0.mat", "185_0.mat", "197@6_0.mat", "209_0.mat", "222_0.mat","234_0.mat"],  # 1797rpm
-           1:["98.mat","106_1.mat", "119_1.mat", "131@6_1.mat", "170_1.mat", "186_1.mat", "198@6_1.mat", "210_1.mat", "223_1.mat","235_1.mat"],  # 1772rpm
-           2:["99.mat","107_2.mat", "120_2.mat", "132@6_2.mat", "171_2.mat", "187_2.mat", "199@6_2.mat", "211_2.mat", "224_2.mat","236_2.mat"],  # 1750rpm
-           3:["100.mat","108_3.mat", "121_3.mat","133@6_3.mat", "172_3.mat", "188_3.mat", "200@6_3.mat", "212_3.mat", "225_3.mat","237_3.mat"]}  # 1730rpm
+
+
+dataname= {0:["97.mat","105.mat", "118.mat", "130.mat", "169.mat", "185.mat", "197.mat", "209.mat", "222.mat","234.mat"],  # 1797rpm
+           1:["98.mat","106.mat", "119.mat", "131.mat", "170.mat", "186.mat", "198.mat", "210.mat", "223.mat","235.mat"],  # 1772rpm
+           2:["99.mat","107.mat", "120.mat", "132.mat", "171.mat", "187.mat", "199.mat", "211.mat", "224.mat","236.mat"],  # 1750rpm
+           3:["100.mat","108.mat", "121.mat","133.mat", "172.mat", "188.mat", "200.mat", "212.mat", "225.mat","237.mat"]}  # 1730rpm
 #12kdrive       noraml     ir007        b007       or007(6)        ir014      b014          or014(6)        ir021        b021      or021(6)
  
 
-
-datasetname = ["12k Drive End Bearing Fault Data", "12k Fan End Bearing Fault Data", "48k Drive End Bearing Fault Data",
-               "Normal Baseline Data"]
+datasetname = ["12k_Drive_End_Bearing_Fault_Data", "12k_Fan_End_Bearing_Fault_Data", "48k_Drive_End_Bearing_Fault_Data",
+               "Normal_Baseline_Data"]
 axis = ["_DE_time", "_FE_time", "_BA_time"]
 
 label = [i for i in range(0, 10)]
@@ -72,7 +73,7 @@ class CWRU(object):
     num_classes = 10
     inputchannel = 1
     def __init__(self, data_dir, transfer_task, normlizetype="0-1"):
-        self.data_dir = data_dir
+        self.data_dir = data_dir+"/CWRU"
         self.source_N = transfer_task[0]
         self.target_N = transfer_task[1]
         self.normlizetype = normlizetype
