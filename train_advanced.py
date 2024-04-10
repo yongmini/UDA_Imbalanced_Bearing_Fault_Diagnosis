@@ -12,6 +12,8 @@ import warnings
 from utils.train_utils_combines import train_utils
 from utils.train_utils_multiDG import train_utils as train_utils_DG
 from utils.train_utils_multiDA import train_utils as train_utils_DA
+from sklearn.metrics import f1_score
+
 
 print(torch.__version__)
 warnings.filterwarnings('ignore')
@@ -35,12 +37,12 @@ def parse_args():
      
     parser.add_argument('--method', type=str, default='DA',choices=['DG', 'multiDA','DA','base'], help='the name of the method')
     parser.add_argument('--model_name', type=str, default='cnn_features_1d', help='the name of the model')
-    parser.add_argument('--data_name', type=str, default='CWRU',choices=['CWRU', 'multi_CWRU','JNU','multi_JNU'] ,help='the name of the data')
+    parser.add_argument('--data_name', type=str, default='JNU',choices=['CWRU', 'multi_CWRU','JNU','multi_JNU'] ,help='the name of the data')
     
     
     parser.add_argument('--data_dir', type=str, default='/home/workspace/UDA_Bearing_Fault_Diagnosis/Data', help='the directory of the data')
 
-    parser.add_argument('--transfer_task', type=list, default=[[1], [0]], help='DG, Multi-DA tasks')
+    parser.add_argument('--transfer_task', type=list, default=[[1,2], [0]], help='DG, Multi-DA tasks')
     #parser.add_argument('--transfer_task', type=list, default=[[1], [0]], help='DA tasks')
     parser.add_argument('--normlizetype', type=str, default='mean-std', help='nomalization type')
 

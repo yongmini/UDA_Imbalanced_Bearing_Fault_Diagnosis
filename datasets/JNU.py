@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from datasets.SequenceDatasets import dataset
 from datasets.sequence_aug import *
 from tqdm import tqdm
-
+from tabulate import tabulate
 signal_size = 1024
 
 
@@ -94,6 +94,7 @@ class JNU(object):
         }
 
 
+    
     def data_split(self, transfer_learning=True, imbalance_ratio=None):
         if transfer_learning:
             # get source train and val
@@ -106,11 +107,14 @@ class JNU(object):
             source_train = dataset(list_data=train_pd, transform=self.data_transforms['train'])
             source_val = dataset(list_data=val_pd, transform=self.data_transforms['val'])
             
-            print("Source Train Label Counts:")
-            print(train_pd['label'].value_counts())
-            print("Source Validation Label Counts:")
-            print(val_pd['label'].value_counts())   
-            
+            # Table for source data distribution
+            source_counts = pd.concat([train_pd['label'].value_counts(), val_pd['label'].value_counts()], axis=1, keys=['Train', 'Validation'])
+            print(source_counts)
+            source_counts.sort_index(inplace=True)
+            source_counts.loc['Dataset Size'] = [len(source_train), len(source_val)]
+            print("Source Data Distribution:")
+            print(tabulate(source_counts, headers='keys', tablefmt='psql'))
+
             
             # get target data and split into train and val
             list_data = get_files(self.data_dir, self.target_N)
@@ -136,16 +140,12 @@ class JNU(object):
             target_train = dataset(list_data=train_pd, transform=self.data_transforms['train'])
             target_val = dataset(list_data=val_pd, transform=self.data_transforms['val'])
 
-     
-            print("Target Train Label Counts:")
-            print(train_pd['label'].value_counts())
-            print("Target Validation Label Counts:")
-            print(val_pd['label'].value_counts())
-            
-            print("Source Train Dataset Size:", len(source_train))
-            print("Source Validation Dataset Size:", len(source_val))
-            print("Target Train Dataset Size:", len(target_train))
-            print("Target Validation Dataset Size:", len(target_val))
+           # Print target data distribution
+            target_counts = pd.concat([train_pd['label'].value_counts(), val_pd['label'].value_counts()], axis=1, keys=['Train', 'Validation'])
+            target_counts.sort_index(inplace=True)
+            target_counts.loc['Dataset Size'] = [len(target_train), len(target_val)]
+            print("Target Data Distribution:")
+            print(tabulate(target_counts, headers='keys', tablefmt='psql'))
 
             return source_train, source_val, target_train, target_val
         else:

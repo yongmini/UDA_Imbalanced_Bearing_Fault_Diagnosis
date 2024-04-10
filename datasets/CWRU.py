@@ -9,7 +9,7 @@ from datasets.sequence_aug import *
 from tqdm import tqdm
 from tabulate import tabulate
 #Digital data was collected at 12,000 samples per second
-signal_size = 1024
+signal_size = 2048
 
 # 기존 
 dataname= {0:["97.mat","105.mat", "118.mat", "130.mat", "169.mat", "185.mat", "197.mat", "209.mat", "222.mat","234.mat"],  # 1797rpm
@@ -125,6 +125,8 @@ class CWRU(object):
             
             # Table for source data distribution
             source_counts = pd.concat([train_pd['label'].value_counts(), val_pd['label'].value_counts()], axis=1, keys=['Train', 'Validation'])
+            print(source_counts)
+            source_counts.sort_index(inplace=True)
             source_counts.loc['Dataset Size'] = [len(source_train), len(source_val)]
             print("Source Data Distribution:")
             print(tabulate(source_counts, headers='keys', tablefmt='psql'))
@@ -156,6 +158,7 @@ class CWRU(object):
 
            # Print target data distribution
             target_counts = pd.concat([train_pd['label'].value_counts(), val_pd['label'].value_counts()], axis=1, keys=['Train', 'Validation'])
+            target_counts.sort_index(inplace=True)
             target_counts.loc['Dataset Size'] = [len(target_train), len(target_val)]
             print("Target Data Distribution:")
             print(tabulate(target_counts, headers='keys', tablefmt='psql'))
