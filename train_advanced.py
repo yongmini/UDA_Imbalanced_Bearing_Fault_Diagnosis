@@ -18,6 +18,15 @@ warnings.filterwarnings('ignore')
 
 args = None
 
+
+# imbalance
+## HEALTHY SAMPLES all, 10% OF SAMPLES, 5% IF SAMPLES, 1% REF SAMPLES
+## HEALTHY SAMPLES all, 5% OF SAMPLES, 1% IF SAMPLES, 10% REF SAMPLES
+## HEALTHY SAMPLES all, 5% OF SAMPLES, 10% IF SAMPLES, 1% REF SAMPLES
+## HEALTHY SAMPLES all, 10% OF SAMPLES, 1% IF SAMPLES, 5% REF SAMPLES
+## HEALTHY SAMPLES all, 1% OF SAMPLES, 5% IF SAMPLES, 10% REF SAMPLES
+## HEALTHY SAMPLES all, 5% OF SAMPLES, 10% IF SAMPLES, 1% REF SAMPLES
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Train')
     # model and data parameters
