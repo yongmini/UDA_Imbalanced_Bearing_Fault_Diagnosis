@@ -10,7 +10,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from collections import defaultdict
-
+import wandb
 import utils
 import model_base
 from train_utils import InitTrain
@@ -200,10 +200,21 @@ class Trainset(InitTrain):
             
             # log the best model according to the val accuracy
             new_acc = self.test()
+            
+            last_acc_formatted = f"{new_acc:.2f}"
+            wandb.log({"last_target_acc": float(last_acc_formatted)})
+            
+            
             if new_acc >= best_acc:
                 best_acc = new_acc
                 best_epoch = epoch
             logging.info("The best model epoch {}, val-acc {:.4f}".format(best_epoch, best_acc))
+            
+            best_acc_formatted = f"{best_acc:.2f}"
+            wandb.log({"best_target_acc": float(best_acc_formatted)})
+            
+            
+            
             
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()

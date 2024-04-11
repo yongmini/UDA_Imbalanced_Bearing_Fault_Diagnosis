@@ -28,7 +28,7 @@ def parse_args():
                         help='Number of workers for dataloader')
     parser.add_argument('--signal_size', type=int, default=2048,
                         help='Signal length split by sliding window')
-    parser.add_argument('--random_state', type=int, default=1,
+    parser.add_argument('--random_state', type=int, default=2024,
                         help='Random state for the entire training')
 
     # optimization information

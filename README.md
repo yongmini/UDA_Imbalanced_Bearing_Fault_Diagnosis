@@ -39,7 +39,7 @@ If you want to specify the imbalance ratio for the training data of the target d
 - Pandas 1.1.5
 - tqdm 4.62.3
 - Scipy 1.2.1
-- pytorch >= 1.1
+- pytorch >= 1.11.0
 - torchvision >= 0.40
 
 

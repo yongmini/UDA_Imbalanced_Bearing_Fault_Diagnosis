@@ -5,9 +5,9 @@ import torch
 import logging
 import importlib
 from datetime import datetime
-
+import wandb
 from opt import parse_args
-
+import numpy as np
 
 def setlogger(path):
     logger = logging.getLogger()
@@ -47,12 +47,23 @@ def creat_file(args):
 
 
 if __name__ == '__main__':
+    
+    
+    
+    
     os.environ['NUMEXPR_MAX_THREADS'] = '8'
     args = parse_args()
     if args.random_state is not None:
+        os.environ['PYTHONHASHSEED'] = str(args.random_state)
+        np.random.seed(args.random_state)
         torch.manual_seed(args.random_state)
         torch.cuda.manual_seed(args.random_state)
-        torch.backends.cudnn.deterministic=True
+        torch.cuda.manual_seed_all(args.random_state)
+        torch.backends.cudnn.deterministic = True
+        
+    wandb.init(project='new', entity='dsym2894', config=args,name=args.model_name)
+    config = wandb.config  # 
+    wandb.config.update(args)
     
     args.source_name = [x.strip() for x in list(args.source.split(','))]
     if '' in args.source_name:
