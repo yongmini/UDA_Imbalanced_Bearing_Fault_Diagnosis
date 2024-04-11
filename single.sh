@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the arrays of models and datasets
-declare -a models=("ACDANN" "CDAN" "CNN" "CORAL" "DANN")
+declare -a models=("CNN" "DANN" "ACDANN" "CORAL" "CDAN")
 declare -a CWRU_sources=("CWRU_0" "CWRU_1" "CWRU_2" "CWRU_3")
 declare -a jnu_sources=("JNU_0" "JNU_1" "JNU_2")
 

@@ -5,7 +5,7 @@ import logging
 import importlib
 from torch import optim
 from torch.utils.data.dataset import ConcatDataset
-
+import wandb
 
 class InitTrain(object):
     
@@ -108,6 +108,7 @@ class InitTrain(object):
             #                                     ).data_preprare(source_label=idx, is_src=True, random_state=args.random_state) 
         for key in self.datasets.keys():
             logging.info('Source set {} number of samples {}.'.format(key, len(self.datasets[key])))
+            wandb.log({f"Source Set {key} Size": len(self.datasets[key])})
             self.datasets[key].summary()
         
         if '_' in args.target:
@@ -122,8 +123,10 @@ class InitTrain(object):
         #     self.datasets['train'], self.datasets['val'] = Dataset(data_root, args.target, args.faults, args.signal_size, args.normlizetype
         #                                                             ).data_preprare(source_label=idx+1, is_src=False, random_state=args.random_state)           
         logging.info('target training set number of samples {}.'.format(len(self.datasets['train'])))
+        wandb.log({"target training Set Size": len(self.datasets['train'])})
         self.datasets['train'].summary()
         logging.info('target validation set number of samples {}.'.format(len(self.datasets['val'])))
+        wandb.log({"Validation Set Size": len(self.datasets['val'])})
         self.datasets['val'].summary()
         
         dataset_keys = args.source_name + ['train', 'val']
