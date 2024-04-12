@@ -111,6 +111,16 @@ class dataset(object):
                     train_labels += train_pd[train_pd["labels"] == label]["labels"].tolist()[:num_samples]
                     
                 train_pd = pd.DataFrame({"data": train_data, "labels": train_labels})
+            #######
+                # val_data = []
+                # val_labels = []
+                # for label, ratio in imbalance_ratio.items():
+                #     num_samples = int(len(val_pd[val_pd["labels"] == label]) * ratio)
+                #     val_data += val_pd[val_pd["labels"] == label]["data"].tolist()[:num_samples]
+                #     val_labels += val_pd[val_pd["labels"] == label]["labels"].tolist()[:num_samples]
+                    
+                # val_pd = pd.DataFrame({"data": train_data, "labels": train_labels})           
+            
             
             # DataFrame 형태의 `train_pd`를 CSV 파일로 저장
             

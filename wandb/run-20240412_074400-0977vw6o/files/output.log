@@ -1,0 +1,76 @@
+04-12 07:44:01 imba: True
+04-12 07:44:01 model_name: CDAN
+04-12 07:44:01 Domain: CWRU
+04-12 07:44:01 source: JNU_0
+04-12 07:44:01 target: JNU_1
+04-12 07:44:01 data_dir: ./datasets
+04-12 07:44:01 train_mode: single_source
+04-12 07:44:01 cuda_device: 0
+04-12 07:44:01 save_dir: ./ckpt/CDAN/single_source
+04-12 07:44:01 max_epoch: 30
+04-12 07:44:01 batch_size: 64
+04-12 07:44:01 num_workers: 0
+04-12 07:44:01 signal_size: 2048
+04-12 07:44:01 random_state: 2024
+04-12 07:44:01 normlizetype: mean-std
+04-12 07:44:01 opt: sgd
+04-12 07:44:01 lr: 0.001
+04-12 07:44:01 momentum: 0.9
+04-12 07:44:01 betas: (0.9, 0.999)
+04-12 07:44:01 weight_decay: 0.0005
+04-12 07:44:01 lr_scheduler: stepLR
+04-12 07:44:01 gamma: 0.2
+04-12 07:44:01 steps: 10
+04-12 07:44:01 tradeoff: ['exp', 'exp', 'exp']
+04-12 07:44:01 dropout: 0.0
+04-12 07:44:01 save: False
+04-12 07:44:01 load_path: 
+04-12 07:44:01 tsne: True
+04-12 07:44:01 save_path: ./ckpt/CDAN/single_source/[JNU_0]To[JNU_1]_0412-074401
+04-12 07:44:01 Detect 4 classes: ['1normal', 'ball', 'inner', 'outer']
+04-12 07:44:01 using 1 / 1 gpus
+Training data length: 1461
+Testing data length: 732
+Source Data Distribution:
++--------------+---------+
+| Label        |   Count |
+|--------------+---------|
+| 0            |     365 |
+| 1            |     365 |
+| 2            |     365 |
+| 3            |     365 |
+| Dataset Size |    1460 |
++--------------+---------+
+04-12 07:44:11 Source set JNU_0 number of samples 1460.
+Training data length: 1461
+Testing data length: 732
+Target Data Distribution:
++--------------+---------+-------+
+|              |   train |   val |
+|--------------+---------+-------|
+| 0            |       2 |   122 |
+| 1            |       2 |   122 |
+| 2            |     243 |   122 |
+| 3            |       2 |   122 |
+| Dataset Size |     249 |   488 |
++--------------+---------+-------+
+04-12 07:44:18 target training set number of samples 249.
+04-12 07:44:18 target validation set number of samples 488.
+04-12 07:44:18 -----Epoch 1/30-----
+04-12 07:44:18 current lr: [0.001, 0.001]
+  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 24.44it/s]100%|##########| 3/3 [00:00<00:00, 24.38it/s]
+04-12 07:44:19 Train-Loss Source Classifier: 1.3798
+04-12 07:44:19 Train-Loss Discriminator: 0.6942
+04-12 07:44:19 Train-Acc Source Data: 0.2344
+04-12 07:44:19 Train-Acc Discriminator: 44.7917
+  0%|          | 0/8 [00:00<?, ?it/s]  0%|          | 0/8 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "train.py", line 95, in <module>
+    trainer.train()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/CDAN.py", line 202, in train
+    new_acc = self.test()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/CDAN.py", line 232, in test
+    acc += utils.get_accuracy(pred, target_labels)
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/utils.py", line 13, in get_accuracy
+    assert preds.shape[0] == targets.shape[0]
+AttributeError: 'tuple' object has no attribute 'shape'

@@ -5,13 +5,13 @@ def parse_args():
  
 
     # basic parameters
-    parser.add_argument('--imba', type=bool, default=False, help='Save logs and trained model checkpoints')
-    parser.add_argument('--model_name', type=str, default='DANN',
+    parser.add_argument('--imba', type=bool, default=True, help='Save logs and trained model checkpoints')
+    parser.add_argument('--model_name', type=str, default='CNN',
                         help='Name of the model (in ./models directory)')
     parser.add_argument('--Domain', type=str, default='CWRU')
-    parser.add_argument('--source', type=str, default='CWRU_1',
-                        help='Source data, separated by "," (select specific conditions of the dataset with name_number, such as CWRU_0)')
-    parser.add_argument('--target', type=str, default='CWRU_0',
+    parser.add_argument('--source', type=str, default='CWRU_0',
+                        help='Source data, separated by "," (select specific conditions of the dataset with name_number, such as JNU_0)')
+    parser.add_argument('--target', type=str, default='CWRU_1',
                         help='Target data (select specific conditions of the dataset with name_number, such as CWRU_0)')
     parser.add_argument('--data_dir', type=str, default="./datasets",
                         help='Directory of the datasets')
@@ -22,7 +22,7 @@ def parse_args():
                         help='Allocate the device to use only one GPU ('' means using cpu)')
     parser.add_argument('--save_dir', type=str, default='./ckpt',
                         help='Directory to save logs and model checkpoints')
-    parser.add_argument('--max_epoch', type=int, default=10,
+    parser.add_argument('--max_epoch', type=int, default=30,
                         help='Number of epochs')
     parser.add_argument('--batch_size', type=int, default=64,
                         help='Batch size')
@@ -30,7 +30,7 @@ def parse_args():
                         help='Number of workers for dataloader')
     parser.add_argument('--signal_size', type=int, default=2048,
                         help='Signal length split by sliding window')
-    parser.add_argument('--random_state', type=int, default=2024,
+    parser.add_argument('--random_state', type=int, default=2,
                         help='Random state for the entire training')
 
     # optimization information

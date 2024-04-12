@@ -1,0 +1,47 @@
+04-12 06:32:13 imba: False
+04-12 06:32:13 model_name: DANN
+04-12 06:32:13 Domain: CWRU
+04-12 06:32:13 source: CWRU_1
+04-12 06:32:13 target: CWRU_0
+04-12 06:32:13 data_dir: ./datasets
+04-12 06:32:13 train_mode: single_source
+04-12 06:32:13 cuda_device: 0
+04-12 06:32:13 save_dir: ./ckpt/DANN/single_source
+04-12 06:32:13 max_epoch: 10
+04-12 06:32:13 batch_size: 64
+04-12 06:32:13 num_workers: 0
+04-12 06:32:13 signal_size: 2048
+04-12 06:32:13 random_state: 2024
+04-12 06:32:13 normlizetype: mean-std
+04-12 06:32:13 opt: sgd
+04-12 06:32:13 lr: 0.001
+04-12 06:32:13 momentum: 0.9
+04-12 06:32:13 betas: (0.9, 0.999)
+04-12 06:32:13 weight_decay: 0.0005
+04-12 06:32:13 lr_scheduler: stepLR
+04-12 06:32:13 gamma: 0.2
+04-12 06:32:13 steps: 10
+04-12 06:32:13 tradeoff: ['exp', 'exp', 'exp']
+04-12 06:32:13 dropout: 0.0
+04-12 06:32:13 save: False
+04-12 06:32:13 load_path: 
+04-12 06:32:13 tsne: True
+04-12 06:32:13 save_path: ./ckpt/DANN/single_source/[CWRU_1]To[CWRU_0]_0412-063213
+04-12 06:32:13 Detect 4 classes: ['ball', 'inner', 'normal', 'outer']
+Traceback (most recent call last):
+  File "train.py", line 89, in <module>
+    trainer = importlib.import_module(f"models.{args.model_name}").Trainset(args)
+  File "/usr/lib/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 674, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 781, in get_code
+  File "<frozen importlib._bootstrap_external>", line 741, in source_to_code
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/DANN.py", line 192
+    source_data, source_labels _ = next(source_iter)
+                               ^
+SyntaxError: invalid syntax

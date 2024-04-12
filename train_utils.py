@@ -112,7 +112,7 @@ class InitTrain(object):
             self.datasets[key].summary()
             
         if args.imba:
-            imbalance_ratio = {0:0.01, 1: 0.01, 2: 1, 3: 0.01}
+            imbalance_ratio = {0:1, 1: 0.01, 2: 0.01, 3: 0.01}
             wandb.log({"imba": imbalance_ratio})
         else :
              imbalance_ratio = None
@@ -151,7 +151,7 @@ class InitTrain(object):
         self.dataloaders = {x: torch.utils.data.DataLoader(self.datasets[x],
                                               batch_size=args.batch_size,
                                               shuffle=(False if x == 'val' else True),
-                                              num_workers=args.num_workers, drop_last=(False if x == 'val' else True),
+                                              num_workers=args.num_workers, drop_last=True,#,(False if x == 'val' else True),
                                               pin_memory=(True if self.device == 'cuda' else False))
                                               for x in dataset_keys}
         self.iters = {x: iter(self.dataloaders[x]) for x in dataset_keys}

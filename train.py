@@ -32,6 +32,7 @@ def creat_file(args):
     file_name = '[' + source + ']' + 'To' + '[' +\
             args.target + ']' + '_' + datetime.strftime(datetime.now(), '%m%d-%H%M%S')
     save_dir = os.path.join(args.save_dir, args.model_name, args.train_mode)
+    args.save_dir= save_dir
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     args.save_path = os.path.join(save_dir, file_name)
@@ -47,8 +48,6 @@ def creat_file(args):
 
 
 if __name__ == '__main__':
-    
-    
     
     
     os.environ['NUMEXPR_MAX_THREADS'] = '8'
@@ -94,8 +93,6 @@ if __name__ == '__main__':
         os.remove(args.save_path + '.log')
     else:
         trainer.train()
-        
-        
         
         if args.save:
             trainer.save_model()
