@@ -1,0 +1,65 @@
+04-11 07:14:19 model_name: CNN
+04-11 07:14:19 source: CWRU_0
+04-11 07:14:19 target: CWRU_1
+04-11 07:14:19 data_dir: ./datasets
+04-11 07:14:19 train_mode: single_source
+04-11 07:14:19 cuda_device: 0
+04-11 07:14:19 save_dir: ./ckpt
+04-11 07:14:19 max_epoch: 30
+04-11 07:14:19 batch_size: 64
+04-11 07:14:19 num_workers: 4
+04-11 07:14:19 signal_size: 2048
+04-11 07:14:19 random_state: 2024
+04-11 07:14:19 normlizetype: mean-std
+04-11 07:14:19 opt: sgd
+04-11 07:14:19 lr: 0.01
+04-11 07:14:19 momentum: 0.9
+04-11 07:14:19 betas: (0.9, 0.999)
+04-11 07:14:19 weight_decay: 0.0005
+04-11 07:14:19 lr_scheduler: stepLR
+04-11 07:14:19 gamma: 0.2
+04-11 07:14:19 steps: 10
+04-11 07:14:19 tradeoff: ['exp', 'exp', 'exp']
+04-11 07:14:19 dropout: 0.0
+04-11 07:14:19 save: False
+04-11 07:14:19 load_path: 
+04-11 07:14:19 save_path: ./ckpt/CNN/single_source/[CWRU_0]To[CWRU_1]_0411-071419
+04-11 07:14:19 Detect 4 classes: ['ball', 'inner', 'normal', 'outer']
+04-11 07:14:19 using 1 / 1 gpus
+Source Data Distribution:04-11 07:14:21 Source set CWRU_0 number of samples 236.
++--------------+---------+
+| Label        |   Count |
+|--------------+---------|
+| 0            |      59 |
+| 1            |      59 |
+| 2            |      59 |
+| 3            |      59 |
+| Dataset Size |     236 |
++--------------+---------+
+
+Target Data Distribution:04-11 07:14:21 target training set number of samples 188.
++--------------+---------+-------+
+|              |   train |   val |
+|--------------+---------+-------|
+| 0            |      47 |    12 |
+| 1            |      47 |    12 |
+| 2            |      47 |    12 |
+| 3            |      47 |    12 |
+| Dataset Size |     188 |    48 |
++--------------+---------+-------+
+
+04-11 07:14:21 target validation set number of samples 48.
+04-11 07:14:22 -----Epoch 1/30-----
+04-11 07:14:22 current lr: [0.01]
+  0%|          | 0/2 [00:00<?, ?it/s]100%|##########| 2/2 [00:00<00:00, 23.10it/s]
+04-11 07:14:22 Train-Loss Source Classifier: 1.4146
+04-11 07:14:22 Train-Acc Source Data: 0.1641
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+Traceback (most recent call last):
+  File "train.py", line 96, in <module>
+    trainer.train()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/CNN.py", line 87, in train
+    new_acc = self.test()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/CNN.py", line 116, in test
+    acc /= num_iter
+ZeroDivisionError: float division by zero

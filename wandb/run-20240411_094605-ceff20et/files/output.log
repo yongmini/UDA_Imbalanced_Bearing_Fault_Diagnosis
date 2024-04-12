@@ -1,0 +1,32 @@
+04-11 09:46:05 imba: True
+04-11 09:46:05 model_name: CDAN
+04-11 09:46:05 Domain: CWRU
+04-11 09:46:05 source: CWRU_0
+04-11 09:46:05 target: CWRU_3
+04-11 09:46:05 data_dir: ./datasets
+04-11 09:46:05 train_mode: single_source
+04-11 09:46:05 cuda_device: 0
+04-11 09:46:05 save_dir: ./ckpt
+04-11 09:46:05 max_epoch: 30
+04-11 09:46:05 batch_size: 64
+04-11 09:46:05 num_workers: 0
+04-11 09:46:05 signal_size: 2048
+04-11 09:46:05 random_state: 2024
+04-11 09:46:05 normlizetype: mean-std
+04-11 09:46:05 opt: sgd
+04-11 09:46:05 lr: 0.01
+04-11 09:46:05 momentum: 0.9
+04-11 09:46:05 betas: (0.9, 0.999)
+04-11 09:46:05 weight_decay: 0.0005
+04-11 09:46:05 lr_scheduler: stepLR
+04-11 09:46:05 gamma: 0.2
+04-11 09:46:05 steps: 10
+04-11 09:46:05 tradeoff: ['exp', 'exp', 'exp']
+04-11 09:46:05 dropout: 0.0
+04-11 09:46:05 save: False
+04-11 09:46:05 load_path: 
+04-11 09:46:05 save_path: ./ckpt/CDAN/single_source/[CWRU_0]To[CWRU_3]_0411-094605
+Traceback (most recent call last):
+  File "train.py", line 83, in <module>
+    args.faults = sorted(os.listdir(os.path.join(data_root, 'condition_%d' % condition)))
+FileNotFoundError: [Errno 2] No such file or directory: './datasets/CWRU/condition_3'

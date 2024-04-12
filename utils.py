@@ -3,6 +3,10 @@ import numpy as np
 from torch import nn
 from torch.autograd import Function
 import torch.nn.functional as F
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+import os
+import seaborn as sns
 
 
 def get_accuracy(preds, targets):
@@ -236,3 +240,33 @@ class DomainAdversarialLoss(nn.Module):
                                     self.bce(d_t, d_label_t, w_t.view_as(d_t)))
         return loss, d_accuracy
 
+def visualize_tsne(features, labels, save_dir):
+    # Perform t-SNE
+    tsne = TSNE(n_components=2, random_state=42)
+    transformed_features = tsne.fit_transform(features)
+
+    # Visualize and save t-SNE plot
+    plt.figure(figsize=(10, 8))
+    for label in np.unique(labels):
+        plt.scatter(transformed_features[labels == label, 0], 
+                    transformed_features[labels == label, 1], 
+                    label=label)
+    plt.title('t-SNE Visualization')
+    plt.xlabel('t-SNE Component 1')
+    plt.ylabel('t-SNE Component 2')
+    plt.legend()
+
+    save_path = os.path.join(save_dir, 'tSNE_visualization.png')
+    plt.savefig(save_path)
+    plt.close() 
+    return save_path
+
+
+def plot_confusion_matrix(cm, class_names, save_dir):
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
+    plt.xlabel('Predicted Labels')
+    plt.ylabel('True Labels')
+    save_path = os.path.join(save_dir, 'confusion_matrix.png')
+    plt.savefig(save_path)
+    plt.close() 

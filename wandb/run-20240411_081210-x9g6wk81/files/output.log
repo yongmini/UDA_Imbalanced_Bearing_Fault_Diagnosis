@@ -1,0 +1,41 @@
+04-11 08:12:11 model_name: CNN
+04-11 08:12:11 Domain: CWRU
+04-11 08:12:11 source: CWRU_1
+04-11 08:12:11 target: CWRU_3
+04-11 08:12:11 data_dir: ./datasets
+04-11 08:12:11 train_mode: single_source
+04-11 08:12:11 cuda_device: 0
+04-11 08:12:11 save_dir: ./ckpt
+04-11 08:12:11 max_epoch: 30
+04-11 08:12:11 batch_size: 64
+04-11 08:12:11 num_workers: 4
+04-11 08:12:11 signal_size: 2048
+04-11 08:12:11 random_state: 2024
+04-11 08:12:11 normlizetype: mean-std
+04-11 08:12:11 opt: sgd
+04-11 08:12:11 lr: 0.01
+04-11 08:12:11 momentum: 0.9
+04-11 08:12:11 betas: (0.9, 0.999)
+04-11 08:12:11 weight_decay: 0.0005
+04-11 08:12:11 lr_scheduler: stepLR
+04-11 08:12:11 gamma: 0.2
+04-11 08:12:11 steps: 10
+04-11 08:12:11 tradeoff: ['exp', 'exp', 'exp']
+04-11 08:12:11 dropout: 0.0
+04-11 08:12:11 save: False
+04-11 08:12:11 load_path: 
+04-11 08:12:11 save_path: ./ckpt/CNN/single_source/[CWRU_1]To[CWRU_3]_0411-081211
+04-11 08:12:11 Detect 4 classes: ['ball', 'inner', 'normal', 'outer']
+04-11 08:12:11 using 1 / 1 gpus
+Training data length: 757
+Testing data length: 379
+Traceback (most recent call last):
+  File "train.py", line 90, in <module>
+    trainer = importlib.import_module(f"models.{args.model_name}").Trainset(args)
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/CNN.py", line 18, in __init__
+    self._init_data()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/train_utils.py", line 103, in _init_data
+    ).data_preprare(source_label=idx, is_src=True, random_state=args.random_state)
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/data_loader/data_load.py", line 75, in data_preprare
+    data_pd = pd.DataFrame({"data": self.combined_data, "labels": self.combined_label})
+AttributeError: 'dataset' object has no attribute 'combined_label'

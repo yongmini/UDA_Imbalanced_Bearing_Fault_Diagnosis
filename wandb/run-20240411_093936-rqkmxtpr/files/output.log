@@ -1,0 +1,42 @@
+04-11 09:39:37 imba: True
+04-11 09:39:37 model_name: CNN
+04-11 09:39:37 Domain: CWRU
+04-11 09:39:37 source: CWRU_3
+04-11 09:39:37 target: CWRU_0
+04-11 09:39:37 data_dir: ./datasets
+04-11 09:39:37 train_mode: single_source
+04-11 09:39:37 cuda_device: 0
+04-11 09:39:37 save_dir: ./ckpt
+04-11 09:39:37 max_epoch: 30
+04-11 09:39:37 batch_size: 64
+04-11 09:39:37 num_workers: 0
+04-11 09:39:37 signal_size: 2048
+04-11 09:39:37 random_state: 2024
+04-11 09:39:37 normlizetype: mean-std
+04-11 09:39:37 opt: sgd
+04-11 09:39:37 lr: 0.01
+04-11 09:39:37 momentum: 0.9
+04-11 09:39:37 betas: (0.9, 0.999)
+04-11 09:39:37 weight_decay: 0.0005
+04-11 09:39:37 lr_scheduler: stepLR
+04-11 09:39:37 gamma: 0.2
+04-11 09:39:37 steps: 10
+04-11 09:39:37 tradeoff: ['exp', 'exp', 'exp']
+04-11 09:39:37 dropout: 0.0
+04-11 09:39:37 save: False
+04-11 09:39:37 load_path: 
+04-11 09:39:37 save_path: ./ckpt/CNN/single_source/[CWRU_3]To[CWRU_0]_0411-093937
+04-11 09:39:37 Detect 4 classes: ['ball', 'inner', 'normal', 'outer']
+04-11 09:39:38 using 1 / 1 gpus
+Traceback (most recent call last):
+  File "train.py", line 90, in <module>
+    trainer = importlib.import_module(f"models.{args.model_name}").Trainset(args)
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/CNN.py", line 18, in __init__
+    self._init_data()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/train_utils.py", line 102, in _init_data
+    self.datasets[source] = Dataset(data_root, src, args.faults, args.signal_size, args.normlizetype, condition=condition
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/data_loader/data_load.py", line 68, in __init__
+    self.train_data, self.train_labels,self.test_data,self.test_labels = get_files(root=data_dir, dataset=dataset, faults=faults, signal_size=signal_size, condition=condition)
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/data_loader/data_load.py", line 17, in get_files
+    for item in os.listdir(data_dir):
+FileNotFoundError: [Errno 2] No such file or directory: './datasets/CWRU/condition_3/ball'

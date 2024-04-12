@@ -12,6 +12,11 @@ import wandb
 import utils
 import model_base
 from train_utils import InitTrain
+from utils import visualize_tsne, plot_confusion_matrix
+import numpy as np     
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 class Trainset(InitTrain):
@@ -71,6 +76,7 @@ class Trainset(InitTrain):
             tradeoff = self._get_tradeoff(args.tradeoff, epoch) 
             
             num_iter = len(self.dataloaders['train'])
+            print(num_iter)
             for i in tqdm(range(num_iter), ascii=True):
                 target_data, target_labels = utils.get_next_batch(self.dataloaders,
                 						 self.iters, 'train', self.device)
@@ -120,18 +126,62 @@ class Trainset(InitTrain):
                     
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
-            
+        if self.args.tsne:
+            self.test_tsne()
+        
     def test(self):
         self.model.eval()
         acc = 0.0
         iters = iter(self.dataloaders['val'])
         num_iter = len(iters)
+        print(num_iter)
         with torch.no_grad():
             for i in tqdm(range(num_iter), ascii=True):
                 target_data, target_labels, _ = next(iters)
                 target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
-                pred = self.model(target_data)
+                pred,_ = self.model(target_data)
                 acc += utils.get_accuracy(pred, target_labels)
         acc /= num_iter
         logging.info('Val-Acc Target Data: {:.4f}'.format(acc))
         return acc
+    
+    
+    def test_tsne(self):
+        self.model.eval()
+        acc = 0.0
+        iters = iter(self.dataloaders['val'])
+        num_iter = len(iters)
+        all_features = []
+        all_labels = []
+        all_preds = [] 
+        with torch.no_grad():
+            for i in tqdm(range(num_iter), ascii=True):
+                target_data, target_labels, _ = next(iters)
+                target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
+                pred, features = self.model(target_data)
+                
+                pred=pred.argmax(dim=1)
+                all_features.append(features.cpu().numpy())
+                all_labels.append(target_labels.cpu().numpy())
+                all_preds.append(pred.cpu().numpy())
+
+        # Concatenate features and labels
+        all_features = np.concatenate(all_features, axis=0)
+        all_labels = np.concatenate(all_labels, axis=0)
+        all_preds = np.concatenate(all_preds, axis=0)
+        
+        cm = confusion_matrix(all_labels, all_preds)
+        print(len(all_labels),len(all_preds))
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(cm, annot=True, cmap='Blues', fmt='d', xticklabels=list(range(len(np.unique(all_labels)))), yticklabels=list(range(len(np.unique(all_labels)))))
+        plt.xlabel('Predicted Labels')
+        plt.ylabel('True Labels')
+        plt.title('Confusion Matrix')
+        plt.tight_layout()
+        plt.savefig('confusion_matrix.png')  # Save confusion matrix plot
+        plt.close()
+    
+        # Perform t-SNE and save plot
+        visualize_tsne(all_features, all_labels, "/home/workspace/UDA_Bearing_Fault_Diagnosis/")
+        
+#cwru 1,2 이상함 0이 적음

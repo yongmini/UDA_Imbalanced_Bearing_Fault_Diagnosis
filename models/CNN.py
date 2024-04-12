@@ -5,9 +5,10 @@ import torch.nn.functional as F
 from collections import defaultdict
 import wandb
 import utils
+from utils import visualize_tsne
 import model_base
 from train_utils import InitTrain
-        
+import numpy as np        
 
 class Trainset(InitTrain):
     
@@ -85,6 +86,7 @@ class Trainset(InitTrain):
             
             # log the best model according to the val accuracy
             new_acc = self.test()
+        
             
             last_acc_formatted = f"{new_acc:.2f}"
             wandb.log({"last_target_acc": float(last_acc_formatted)})
@@ -101,7 +103,8 @@ class Trainset(InitTrain):
 
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
-    
+        self.test_tsne()    
+        
     def test(self):
         self.model.eval()
         acc = 0.0
@@ -111,8 +114,31 @@ class Trainset(InitTrain):
             for i in tqdm(range(num_iter), ascii=True):
                 target_data, target_labels, _ = next(iters)
                 target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
-                pred = self.model(target_data)
+                pred,_ = self.model(target_data)
                 acc += utils.get_accuracy(pred, target_labels)
         acc /= num_iter
         logging.info('Val-Acc Target Data: {:.4f}'.format(acc))
         return acc
+
+    def test_tsne(self):
+        self.model.eval()
+        acc = 0.0
+        iters = iter(self.dataloaders['val'])
+        num_iter = len(iters)
+        all_features = []
+        all_labels = []
+        with torch.no_grad():
+            for i in tqdm(range(num_iter), ascii=True):
+                target_data, target_labels, _ = next(iters)
+                target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
+                pred, features = self.model(target_data)
+                all_features.append(features.cpu().numpy())
+                all_labels.append(target_labels.cpu().numpy())
+
+
+        # Concatenate features and labels
+        all_features = np.concatenate(all_features, axis=0)
+        all_labels = np.concatenate(all_labels, axis=0)
+
+        # Perform t-SNE and save plot
+        visualize_tsne(all_features, all_labels, "/home/workspace/UDA_Bearing_Fault_Diagnosis/")

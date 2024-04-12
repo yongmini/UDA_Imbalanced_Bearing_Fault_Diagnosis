@@ -1,0 +1,50 @@
+04-11 07:33:32 model_name: CNN
+04-11 07:33:32 Domain: CWRU
+04-11 07:33:32 source: CWRU_0
+04-11 07:33:32 target: CWRU_2
+04-11 07:33:32 data_dir: ./datasets
+04-11 07:33:32 train_mode: single_source
+04-11 07:33:32 cuda_device: 0
+04-11 07:33:32 save_dir: ./ckpt
+04-11 07:33:32 max_epoch: 30
+04-11 07:33:32 batch_size: 64
+04-11 07:33:32 num_workers: 4
+04-11 07:33:32 signal_size: 2048
+04-11 07:33:32 random_state: 2024
+04-11 07:33:32 normlizetype: mean-std
+04-11 07:33:32 opt: sgd
+04-11 07:33:32 lr: 0.01
+04-11 07:33:32 momentum: 0.9
+04-11 07:33:32 betas: (0.9, 0.999)
+04-11 07:33:32 weight_decay: 0.0005
+04-11 07:33:32 lr_scheduler: stepLR
+04-11 07:33:32 gamma: 0.2
+04-11 07:33:32 steps: 10
+04-11 07:33:32 tradeoff: ['exp', 'exp', 'exp']
+04-11 07:33:32 dropout: 0.0
+04-11 07:33:32 save: False
+04-11 07:33:32 load_path: 
+04-11 07:33:32 save_path: ./ckpt/CNN/single_source/[CWRU_0]To[CWRU_2]_0411-073332
+04-11 07:33:32 Detect 4 classes: ['ball', 'inner', 'normal', 'outer']
+04-11 07:33:33 using 1 / 1 gpus
+Source Data Distribution:04-11 07:33:35 Source set CWRU_0 number of samples 708.
+
++--------------+---------+
+| Label        |   Count |
+|--------------+---------|
+| 0            |     177 |
+| 1            |     177 |
+| 2            |     177 |
+| 3            |     177 |
+| Dataset Size |     708 |
++--------------+---------+
+Traceback (most recent call last):
+  File "train.py", line 90, in <module>
+    trainer = importlib.import_module(f"models.{args.model_name}").Trainset(args)
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/CNN.py", line 18, in __init__
+    self._init_data()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/train_utils.py", line 119, in _init_data
+    ).data_preprare(source_label=idx+1, is_src=False, random_state=args.random_state)#,imbalance_ratio={0:0.01, 1: 0.05, 2: 1, 3: 0.1})
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/data_loader/data_load.py", line 86, in data_preprare
+    train_pd, val_pd = data_utils.train_test_split_(data_pd, test_size=self.test_size, num_classes=self.num_classes, random_state=random_state)
+TypeError: train_test_split_() got an unexpected keyword argument 'random_state'

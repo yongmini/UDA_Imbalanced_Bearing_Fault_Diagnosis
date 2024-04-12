@@ -61,7 +61,7 @@ if __name__ == '__main__':
         torch.cuda.manual_seed_all(args.random_state)
         torch.backends.cudnn.deterministic = True
         
-    wandb.init(project='new', entity='dsym2894', config=args,name=args.model_name)
+    wandb.init(project=args.Domain, entity='dsym2894', config=args,name=args.model_name)
     config = wandb.config  # 
     wandb.config.update(args)
     
@@ -94,6 +94,9 @@ if __name__ == '__main__':
         os.remove(args.save_path + '.log')
     else:
         trainer.train()
+        
+        
+        
         if args.save:
             trainer.save_model()
         else:

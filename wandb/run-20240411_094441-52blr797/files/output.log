@@ -1,0 +1,32 @@
+04-11 09:44:42 imba: True
+04-11 09:44:42 model_name: CORAL
+04-11 09:44:42 Domain: CWRU
+04-11 09:44:42 source: CWRU_1
+04-11 09:44:42 target: CWRU_3
+04-11 09:44:42 data_dir: ./datasets
+04-11 09:44:42 train_mode: single_source
+04-11 09:44:42 cuda_device: 0
+04-11 09:44:42 save_dir: ./ckpt
+04-11 09:44:42 max_epoch: 30
+04-11 09:44:42 batch_size: 64
+04-11 09:44:42 num_workers: 0
+04-11 09:44:42 signal_size: 2048
+04-11 09:44:42 random_state: 2024
+04-11 09:44:42 normlizetype: mean-std
+04-11 09:44:42 opt: sgd
+04-11 09:44:42 lr: 0.01
+04-11 09:44:42 momentum: 0.9
+04-11 09:44:42 betas: (0.9, 0.999)
+04-11 09:44:42 weight_decay: 0.0005
+04-11 09:44:42 lr_scheduler: stepLR
+04-11 09:44:42 gamma: 0.2
+04-11 09:44:42 steps: 10
+04-11 09:44:42 tradeoff: ['exp', 'exp', 'exp']
+04-11 09:44:42 dropout: 0.0
+04-11 09:44:42 save: False
+04-11 09:44:42 load_path: 
+04-11 09:44:42 save_path: ./ckpt/CORAL/single_source/[CWRU_1]To[CWRU_3]_0411-094442
+Traceback (most recent call last):
+  File "train.py", line 83, in <module>
+    args.faults = sorted(os.listdir(os.path.join(data_root, 'condition_%d' % condition)))
+FileNotFoundError: [Errno 2] No such file or directory: './datasets/CWRU/condition_3'

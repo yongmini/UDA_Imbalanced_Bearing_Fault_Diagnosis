@@ -110,13 +110,24 @@ class InitTrain(object):
             logging.info('Source set {} number of samples {}.'.format(key, len(self.datasets[key])))
             wandb.log({f"Source Set {key} Size": len(self.datasets[key])})
             self.datasets[key].summary()
+            
+        if args.imba:
+            imbalance_ratio = {0:0.01, 1: 0.01, 2: 1, 3: 0.01}
+            wandb.log({"imba": imbalance_ratio})
+        else :
+             imbalance_ratio = None
+        
         
         if '_' in args.target:
             tgt, condition = args.target.split('_')[0], int(args.target.split('_')[1])
             data_root = os.path.join(args.data_dir, tgt)
             Dataset = importlib.import_module("data_loader.data_load").dataset
             self.datasets['train'], self.datasets['val'] = Dataset(data_root, tgt, args.faults, args.signal_size, args.normlizetype, condition=condition
-                                                                   ).data_preprare(source_label=idx+1, is_src=False, random_state=args.random_state)#,imbalance_ratio={0:0.01, 1: 0.05, 2: 1, 3: 0.1})
+                                                                   ).data_preprare(source_label=idx+1, is_src=False, random_state=args.random_state,imbalance_ratio=imbalance_ratio)
+       
+        
+        
+        
         # else:
         #     data_root = os.path.join(args.data_dir, args.target)
         #     Dataset = importlib.import_module("data_loader.load").dataset
@@ -140,7 +151,7 @@ class InitTrain(object):
         self.dataloaders = {x: torch.utils.data.DataLoader(self.datasets[x],
                                               batch_size=args.batch_size,
                                               shuffle=(False if x == 'val' else True),
-                                              num_workers=args.num_workers, drop_last=True,
+                                              num_workers=args.num_workers, drop_last=(False if x == 'val' else True),
                                               pin_memory=(True if self.device == 'cuda' else False))
                                               for x in dataset_keys}
         self.iters = {x: iter(self.dataloaders[x]) for x in dataset_keys}
