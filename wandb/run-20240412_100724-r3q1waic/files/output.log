@@ -1,80 +1,0 @@
-04-12 10:07:25 imba: True
-04-12 10:07:25 model_name: DANN
-04-12 10:07:25 Domain: CWRU
-04-12 10:07:25 source: JNU_0
-04-12 10:07:25 target: JNU_1
-04-12 10:07:25 data_dir: ./datasets
-04-12 10:07:25 train_mode: single_source
-04-12 10:07:25 cuda_device: 0
-04-12 10:07:25 save_dir: ./ckpt/DANN/single_source
-04-12 10:07:25 max_epoch: 30
-04-12 10:07:25 batch_size: 64
-04-12 10:07:25 num_workers: 0
-04-12 10:07:25 signal_size: 2048
-04-12 10:07:25 random_state: 2
-04-12 10:07:25 normlizetype: mean-std
-04-12 10:07:25 opt: sgd
-04-12 10:07:25 lr: 0.001
-04-12 10:07:25 momentum: 0.9
-04-12 10:07:25 betas: (0.9, 0.999)
-04-12 10:07:25 weight_decay: 0.0005
-04-12 10:07:25 lr_scheduler: stepLR
-04-12 10:07:25 gamma: 0.2
-04-12 10:07:25 steps: 10
-04-12 10:07:25 tradeoff: ['exp', 'exp', 'exp']
-04-12 10:07:25 dropout: 0.0
-04-12 10:07:25 save: False
-04-12 10:07:25 load_path: 
-04-12 10:07:25 tsne: True
-04-12 10:07:25 save_path: ./ckpt/DANN/single_source/[JNU_0]To[JNU_1]_0412-100725
-04-12 10:07:25 Detect 4 classes: ['1normal', 'ball', 'inner', 'outer']
-04-12 10:07:26 using 1 / 1 gpus
-Training data length: 1461
-Testing data length: 732
-04-12 10:07:37 Source set JNU_0 number of samples 1460.Source Data Distribution:
-
-+--------------+---------+
-| Label        |   Count |
-|--------------+---------|
-| 0            |     365 |
-| 1            |     365 |
-| 2            |     365 |
-| 3            |     365 |
-| Dataset Size |    1460 |
-+--------------+---------+
-Training data length: 1461
-Testing data length: 732
-04-12 10:07:45 target training set number of samples 249.
-Target Data Distribution:
-04-12 10:07:45 target validation set number of samples 488.
-04-12 10:07:45 -----Epoch 1/30-----
-04-12 10:07:45 current lr: [0.001, 0.001]
-+--------------+---------+-------+
-|              |   train |   val |
-|--------------+---------+-------|
-| 0            |     243 |   122 |
-| 1            |       2 |   122 |
-| 2            |       2 |   122 |
-| 3            |       2 |   122 |
-| Dataset Size |     249 |   488 |
-+--------------+---------+-------+
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 24.42it/s]100%|##########| 3/3 [00:00<00:00, 24.37it/s]
-04-12 10:07:45 Train-Loss Source Classifier: 1.3961
-04-12 10:07:45 Train-Loss Discriminator: 0.6868
-04-12 10:07:45 Train-Acc Source Data: 0.2083
-04-12 10:07:45 Train-Acc Discriminator: 50.0000
-  0%|          | 0/8 [00:00<?, ?it/s]100%|##########| 8/8 [00:00<00:00, 160.48it/s]
-04-12 10:07:45 Val-Acc Target Data: 0.2383
-04-12 10:07:45 The best model epoch 1, val-acc 0.2383
-  0%|          | 0/4 [00:00<?, ?it/s]100%|##########| 4/4 [00:00<00:00, 137.95it/s]
-04-12 10:07:46 -----Epoch 2/30-----
-04-12 10:07:46 current lr: [0.001, 0.001]
-  0%|          | 0/4 [00:00<?, ?it/s] 75%|#######5  | 3/4 [00:00<00:00, 33.22it/s]
-Traceback (most recent call last):
-  File "train.py", line 95, in <module>
-    trainer.train()
-  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/DANN.py", line 95, in train
-    loss_c = F.cross_entropy(y_s, source_labels)
-  File "/usr/local/lib/python3.6/dist-packages/torch/nn/functional.py", line 2962, in cross_entropy
-    return torch._C._nn.cross_entropy_loss(input, target, weight, _Reduction.get_enum(reduction), ignore_index, label_smoothing)
-ValueError: Expected input batch_size (61) to match target batch_size (64).

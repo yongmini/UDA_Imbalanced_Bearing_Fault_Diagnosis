@@ -1,357 +1,0 @@
-04-11 08:53:55 imba: False
-04-11 08:53:55 model_name: DANN
-04-11 08:53:55 Domain: CWRU
-04-11 08:53:55 source: CWRU_2
-04-11 08:53:55 target: CWRU_3
-04-11 08:53:55 data_dir: ./datasets
-04-11 08:53:55 train_mode: single_source
-04-11 08:53:55 cuda_device: 0
-04-11 08:53:55 save_dir: ./ckpt
-04-11 08:53:55 max_epoch: 30
-04-11 08:53:55 batch_size: 64
-04-11 08:53:55 num_workers: 0
-04-11 08:53:55 signal_size: 2048
-04-11 08:53:55 random_state: 2024
-04-11 08:53:55 normlizetype: mean-std
-04-11 08:53:55 opt: sgd
-04-11 08:53:55 lr: 0.01
-04-11 08:53:55 momentum: 0.9
-04-11 08:53:55 betas: (0.9, 0.999)
-04-11 08:53:55 weight_decay: 0.0005
-04-11 08:53:55 lr_scheduler: stepLR
-04-11 08:53:55 gamma: 0.2
-04-11 08:53:55 steps: 10
-04-11 08:53:55 tradeoff: ['exp', 'exp', 'exp']
-04-11 08:53:55 dropout: 0.0
-04-11 08:53:55 save: False
-04-11 08:53:55 load_path: 
-04-11 08:53:55 save_path: ./ckpt/DANN/single_source/[CWRU_2]To[CWRU_3]_0411-085355
-04-11 08:53:55 Detect 4 classes: ['ball', 'inner', 'normal', 'outer']
-04-11 08:53:55 using 1 / 1 gpus
-Training data length: 757
-Testing data length: 379
-Source Data Distribution:
-04-11 08:53:58 Source set CWRU_2 number of samples 1044.+--------------+---------+
-| Label        |   Count |
-|--------------+---------|
-| 0            |     261 |
-| 1            |     261 |
-| 2            |     261 |
-| 3            |     261 |
-| Dataset Size |    1044 |
-+--------------+---------+
-
-Training data length: 640
-Testing data length: 320
-Target Data Distribution:
-04-11 08:53:58 target training set number of samples 472.+--------------+---------+-------+
-|              |   train |   val |
-|--------------+---------+-------|
-| 0            |     118 |    59 |
-| 1            |     118 |    59 |
-| 2            |     118 |    59 |
-| 3            |     118 |    59 |
-| Dataset Size |     472 |   236 |
-+--------------+---------+-------+
-
-04-11 08:53:58 target validation set number of samples 236.
-04-11 08:53:58 -----Epoch 1/30-----
-04-11 08:53:58 current lr: [0.01, 0.01]
-  0%|          | 0/7 [00:00<?, ?it/s] 43%|####2     | 3/7 [00:00<00:00, 25.16it/s]100%|##########| 7/7 [00:00<00:00, 32.04it/s]100%|##########| 7/7 [00:00<00:00, 30.94it/s]
-04-11 08:53:58 Train-Loss Source Classifier: 1.2442
-04-11 08:53:58 Train-Loss Discriminator: 0.6970
-04-11 08:53:58 Train-Acc Source Data: 0.3750
-04-11 08:53:58 Train-Acc Discriminator: 50.0000
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 153.43it/s]
-04-11 08:53:58 Val-Acc Target Data: 0.4115
-04-11 08:53:58 The best model epoch 1, val-acc 0.4115
-04-11 08:53:58 -----Epoch 2/30-----
-04-11 08:53:58 current lr: [0.01, 0.01]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 36.60it/s]100%|##########| 7/7 [00:00<00:00, 37.07it/s]
-04-11 08:53:58 Train-Loss Source Classifier: 0.6419
-04-11 08:53:58 Train-Loss Discriminator: 0.6946
-04-11 08:53:58 Train-Acc Source Data: 0.7946
-04-11 08:53:58 Train-Acc Discriminator: 52.1205
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 157.16it/s]
-04-11 08:53:58 Val-Acc Target Data: 0.4792
-04-11 08:53:58 The best model epoch 2, val-acc 0.4792
-04-11 08:53:58 -----Epoch 3/30-----
-04-11 08:53:58 current lr: [0.01, 0.01]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 37.97it/s]100%|##########| 7/7 [00:00<00:00, 36.68it/s]
-04-11 08:53:59 Train-Loss Source Classifier: 0.2992
-04-11 08:53:59 Train-Loss Discriminator: 0.6898
-04-11 08:53:59 Train-Acc Source Data: 0.8705
-04-11 08:53:59 Train-Acc Discriminator: 57.9241
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 136.51it/s]
-04-11 08:53:59 Val-Acc Target Data: 0.5521
-04-11 08:53:59 The best model epoch 3, val-acc 0.5521
-04-11 08:53:59 -----Epoch 4/30-----
-04-11 08:53:59 current lr: [0.01, 0.01]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 38.43it/s]100%|##########| 7/7 [00:00<00:00, 36.93it/s]
-04-11 08:53:59 Train-Loss Source Classifier: 0.1669
-04-11 08:53:59 Train-Loss Discriminator: 0.6810
-04-11 08:53:59 Train-Acc Source Data: 0.9420
-04-11 08:53:59 Train-Acc Discriminator: 63.3929
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 154.24it/s]
-04-11 08:53:59 Val-Acc Target Data: 0.6927
-04-11 08:53:59 The best model epoch 4, val-acc 0.6927
-04-11 08:53:59 -----Epoch 5/30-----
-04-11 08:53:59 current lr: [0.01, 0.01]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 39.22it/s]100%|##########| 7/7 [00:00<00:00, 37.14it/s]
-04-11 08:53:59 Train-Loss Source Classifier: 0.2341
-04-11 08:53:59 Train-Loss Discriminator: 0.6695
-04-11 08:53:59 Train-Acc Source Data: 0.9397
-04-11 08:53:59 Train-Acc Discriminator: 64.9554
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 155.24it/s]
-04-11 08:53:59 Val-Acc Target Data: 0.8854
-04-11 08:53:59 The best model epoch 5, val-acc 0.8854
-04-11 08:53:59 -----Epoch 6/30-----
-04-11 08:53:59 current lr: [0.01, 0.01]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 39.09it/s]100%|##########| 7/7 [00:00<00:00, 38.62it/s]
-04-11 08:53:59 Train-Loss Source Classifier: 0.0538
-04-11 08:53:59 Train-Loss Discriminator: 0.6651
-04-11 08:53:59 Train-Acc Source Data: 0.9933
-04-11 08:53:59 Train-Acc Discriminator: 68.7500
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 155.38it/s]
-04-11 08:53:59 Val-Acc Target Data: 0.8281
-04-11 08:53:59 The best model epoch 5, val-acc 0.8854
-04-11 08:53:59 -----Epoch 7/30-----
-04-11 08:53:59 current lr: [0.01, 0.01]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 37.17it/s]100%|##########| 7/7 [00:00<00:00, 37.81it/s]
-04-11 08:53:59 Train-Loss Source Classifier: 0.0182
-04-11 08:53:59 Train-Loss Discriminator: 0.6688
-04-11 08:53:59 Train-Acc Source Data: 0.9978
-04-11 08:53:59 Train-Acc Discriminator: 66.0714
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 154.14it/s]
-04-11 08:53:59 Val-Acc Target Data: 0.8854
-04-11 08:53:59 The best model epoch 7, val-acc 0.8854
-04-11 08:53:59 -----Epoch 8/30-----
-04-11 08:53:59 current lr: [0.01, 0.01]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 39.26it/s]100%|##########| 7/7 [00:00<00:00, 38.97it/s]
-04-11 08:54:00 Train-Loss Source Classifier: 0.0016
-04-11 08:54:00 Train-Loss Discriminator: 0.6833
-04-11 08:54:00 Train-Acc Source Data: 1.0000
-04-11 08:54:00 Train-Acc Discriminator: 57.1429
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 162.26it/s]
-04-11 08:54:00 Val-Acc Target Data: 0.9115
-04-11 08:54:00 The best model epoch 8, val-acc 0.9115
-04-11 08:54:00 -----Epoch 9/30-----
-04-11 08:54:00 current lr: [0.01, 0.01]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 38.85it/s]100%|##########| 7/7 [00:00<00:00, 38.36it/s]
-04-11 08:54:00 Train-Loss Source Classifier: 0.0004
-04-11 08:54:00 Train-Loss Discriminator: 0.6819
-04-11 08:54:00 Train-Acc Source Data: 1.0000
-04-11 08:54:00 Train-Acc Discriminator: 55.1339
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 139.44it/s]
-04-11 08:54:00 Val-Acc Target Data: 0.9531
-04-11 08:54:00 The best model epoch 9, val-acc 0.9531
-04-11 08:54:00 -----Epoch 10/30-----
-04-11 08:54:00 current lr: [0.01, 0.01]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 38.70it/s]100%|##########| 7/7 [00:00<00:00, 38.67it/s]
-04-11 08:54:00 Train-Loss Source Classifier: 0.0005
-04-11 08:54:00 Train-Loss Discriminator: 0.6810
-04-11 08:54:00 Train-Acc Source Data: 1.0000
-04-11 08:54:00 Train-Acc Discriminator: 55.5804
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 164.43it/s]
-04-11 08:54:00 Val-Acc Target Data: 0.9948
-04-11 08:54:00 The best model epoch 10, val-acc 0.9948
-04-11 08:54:00 -----Epoch 11/30-----
-04-11 08:54:00 current lr: [0.002, 0.002]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 39.92it/s]100%|##########| 7/7 [00:00<00:00, 38.22it/s]
-04-11 08:54:00 Train-Loss Source Classifier: 0.0007
-04-11 08:54:00 Train-Loss Discriminator: 0.6746
-04-11 08:54:00 Train-Acc Source Data: 1.0000
-04-11 08:54:00 Train-Acc Discriminator: 58.3705
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 159.42it/s]
-04-11 08:54:00 Val-Acc Target Data: 0.9948
-04-11 08:54:00 The best model epoch 11, val-acc 0.9948
-04-11 08:54:00 -----Epoch 12/30-----
-04-11 08:54:00 current lr: [0.002, 0.002]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 38.92it/s]100%|##########| 7/7 [00:00<00:00, 37.51it/s]
-04-11 08:54:01 Train-Loss Source Classifier: 0.0005
-04-11 08:54:01 Train-Loss Discriminator: 0.6679
-04-11 08:54:01 Train-Acc Source Data: 1.0000
-04-11 08:54:01 Train-Acc Discriminator: 66.1830
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 161.93it/s]
-04-11 08:54:01 Val-Acc Target Data: 1.0000
-04-11 08:54:01 The best model epoch 12, val-acc 1.0000
-04-11 08:54:01 -----Epoch 13/30-----
-04-11 08:54:01 current lr: [0.002, 0.002]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 38.65it/s]100%|##########| 7/7 [00:00<00:00, 37.13it/s]
-04-11 08:54:01 Train-Loss Source Classifier: 0.0006
-04-11 08:54:01 Train-Loss Discriminator: 0.6721
-04-11 08:54:01 Train-Acc Source Data: 1.0000
-04-11 08:54:01 Train-Acc Discriminator: 60.4911
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 159.24it/s]
-04-11 08:54:01 Val-Acc Target Data: 1.0000
-04-11 08:54:01 The best model epoch 13, val-acc 1.0000
-04-11 08:54:01 -----Epoch 14/30-----
-04-11 08:54:01 current lr: [0.002, 0.002]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 38.47it/s]100%|##########| 7/7 [00:00<00:00, 36.18it/s]
-04-11 08:54:01 Train-Loss Source Classifier: 0.0006
-04-11 08:54:01 Train-Loss Discriminator: 0.6662
-04-11 08:54:01 Train-Acc Source Data: 1.0000
-04-11 08:54:01 Train-Acc Discriminator: 62.1652
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 145.75it/s]
-04-11 08:54:01 Val-Acc Target Data: 1.0000
-04-11 08:54:01 The best model epoch 14, val-acc 1.0000
-04-11 08:54:01 -----Epoch 15/30-----
-04-11 08:54:01 current lr: [0.002, 0.002]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 39.40it/s]100%|##########| 7/7 [00:00<00:00, 38.12it/s]
-04-11 08:54:01 Train-Loss Source Classifier: 0.0004
-04-11 08:54:01 Train-Loss Discriminator: 0.6612
-04-11 08:54:01 Train-Acc Source Data: 1.0000
-04-11 08:54:01 Train-Acc Discriminator: 64.8438
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 162.34it/s]
-04-11 08:54:01 Val-Acc Target Data: 1.0000
-04-11 08:54:01 The best model epoch 15, val-acc 1.0000
-04-11 08:54:01 -----Epoch 16/30-----
-04-11 08:54:01 current lr: [0.002, 0.002]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 38.95it/s]100%|##########| 7/7 [00:00<00:00, 37.67it/s]
-04-11 08:54:01 Train-Loss Source Classifier: 0.0007
-04-11 08:54:01 Train-Loss Discriminator: 0.6572
-04-11 08:54:01 Train-Acc Source Data: 1.0000
-04-11 08:54:01 Train-Acc Discriminator: 66.2946
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 143.51it/s]
-04-11 08:54:01 Val-Acc Target Data: 1.0000
-04-11 08:54:01 The best model epoch 16, val-acc 1.0000
-04-11 08:54:01 -----Epoch 17/30-----
-04-11 08:54:01 current lr: [0.002, 0.002]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 39.12it/s]100%|##########| 7/7 [00:00<00:00, 38.71it/s]
-04-11 08:54:02 Train-Loss Source Classifier: 0.0006
-04-11 08:54:02 Train-Loss Discriminator: 0.6596
-04-11 08:54:02 Train-Acc Source Data: 1.0000
-04-11 08:54:02 Train-Acc Discriminator: 66.8527
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 144.78it/s]
-04-11 08:54:02 Val-Acc Target Data: 1.0000
-04-11 08:54:02 The best model epoch 17, val-acc 1.0000
-04-11 08:54:02 -----Epoch 18/30-----
-04-11 08:54:02 current lr: [0.002, 0.002]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 36.58it/s]100%|##########| 7/7 [00:00<00:00, 36.19it/s]
-04-11 08:54:02 Train-Loss Source Classifier: 0.0005
-04-11 08:54:02 Train-Loss Discriminator: 0.6569
-04-11 08:54:02 Train-Acc Source Data: 1.0000
-04-11 08:54:02 Train-Acc Discriminator: 69.9777
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 153.75it/s]
-04-11 08:54:02 Val-Acc Target Data: 1.0000
-04-11 08:54:02 The best model epoch 18, val-acc 1.0000
-04-11 08:54:02 -----Epoch 19/30-----
-04-11 08:54:02 current lr: [0.002, 0.002]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 37.35it/s]100%|##########| 7/7 [00:00<00:00, 37.84it/s]
-04-11 08:54:02 Train-Loss Source Classifier: 0.0005
-04-11 08:54:02 Train-Loss Discriminator: 0.6543
-04-11 08:54:02 Train-Acc Source Data: 1.0000
-04-11 08:54:02 Train-Acc Discriminator: 67.4107
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 137.22it/s]
-04-11 08:54:02 Val-Acc Target Data: 1.0000
-04-11 08:54:02 The best model epoch 19, val-acc 1.0000
-04-11 08:54:02 -----Epoch 20/30-----
-04-11 08:54:02 current lr: [0.002, 0.002]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 38.32it/s]100%|##########| 7/7 [00:00<00:00, 36.75it/s]
-04-11 08:54:02 Train-Loss Source Classifier: 0.0006
-04-11 08:54:02 Train-Loss Discriminator: 0.6579
-04-11 08:54:02 Train-Acc Source Data: 1.0000
-04-11 08:54:02 Train-Acc Discriminator: 67.5223
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 131.44it/s]
-04-11 08:54:02 Val-Acc Target Data: 0.9948
-04-11 08:54:02 The best model epoch 19, val-acc 1.0000
-04-11 08:54:02 -----Epoch 21/30-----
-04-11 08:54:02 current lr: [0.0004, 0.0004]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 39.24it/s]100%|##########| 7/7 [00:00<00:00, 38.17it/s]
-04-11 08:54:02 Train-Loss Source Classifier: 0.0006
-04-11 08:54:02 Train-Loss Discriminator: 0.6513
-04-11 08:54:02 Train-Acc Source Data: 1.0000
-04-11 08:54:02 Train-Acc Discriminator: 68.7500
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 162.05it/s]
-04-11 08:54:03 Val-Acc Target Data: 0.9948
-04-11 08:54:03 The best model epoch 19, val-acc 1.0000
-04-11 08:54:03 -----Epoch 22/30-----
-04-11 08:54:03 current lr: [0.0004, 0.0004]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 39.24it/s]100%|##########| 7/7 [00:00<00:00, 37.58it/s]
-04-11 08:54:03 Train-Loss Source Classifier: 0.0006
-04-11 08:54:03 Train-Loss Discriminator: 0.6545
-04-11 08:54:03 Train-Acc Source Data: 1.0000
-04-11 08:54:03 Train-Acc Discriminator: 69.4196
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 124.90it/s]
-04-11 08:54:03 Val-Acc Target Data: 0.9948
-04-11 08:54:03 The best model epoch 19, val-acc 1.0000
-04-11 08:54:03 -----Epoch 23/30-----
-04-11 08:54:03 current lr: [0.0004, 0.0004]
-  0%|          | 0/7 [00:00<?, ?it/s] 71%|#######1  | 5/7 [00:00<00:00, 39.14it/s]100%|##########| 7/7 [00:00<00:00, 38.62it/s]
-04-11 08:54:03 Train-Loss Source Classifier: 0.0005
-04-11 08:54:03 Train-Loss Discriminator: 0.6523
-04-11 08:54:03 Train-Acc Source Data: 1.0000
-04-11 08:54:03 Train-Acc Discriminator: 68.9732
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 158.25it/s]
-04-11 08:54:03 Val-Acc Target Data: 0.9948
-04-11 08:54:03 The best model epoch 19, val-acc 1.0000
-04-11 08:54:03 -----Epoch 24/30-----
-04-11 08:54:03 current lr: [0.0004, 0.0004]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 39.38it/s]100%|##########| 7/7 [00:00<00:00, 38.62it/s]
-04-11 08:54:03 Train-Loss Source Classifier: 0.0006
-04-11 08:54:03 Train-Loss Discriminator: 0.6521
-04-11 08:54:03 Train-Acc Source Data: 1.0000
-04-11 08:54:03 Train-Acc Discriminator: 70.7589
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 154.07it/s]
-04-11 08:54:03 Val-Acc Target Data: 0.9844
-04-11 08:54:03 The best model epoch 19, val-acc 1.0000
-04-11 08:54:03 -----Epoch 25/30-----
-04-11 08:54:03 current lr: [0.0004, 0.0004]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 38.34it/s]100%|##########| 7/7 [00:00<00:00, 37.47it/s]
-04-11 08:54:03 Train-Loss Source Classifier: 0.0006
-04-11 08:54:03 Train-Loss Discriminator: 0.6539
-04-11 08:54:03 Train-Acc Source Data: 1.0000
-04-11 08:54:03 Train-Acc Discriminator: 69.7545
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 144.68it/s]
-04-11 08:54:03 Val-Acc Target Data: 0.9948
-04-11 08:54:03 The best model epoch 19, val-acc 1.0000
-04-11 08:54:03 -----Epoch 26/30-----
-04-11 08:54:03 current lr: [0.0004, 0.0004]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 38.77it/s]100%|##########| 7/7 [00:00<00:00, 38.01it/s]
-04-11 08:54:04 Train-Loss Source Classifier: 0.0006
-04-11 08:54:04 Train-Loss Discriminator: 0.6535
-04-11 08:54:04 Train-Acc Source Data: 1.0000
-04-11 08:54:04 Train-Acc Discriminator: 67.9688
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 148.76it/s]
-04-11 08:54:04 Val-Acc Target Data: 0.9948
-04-11 08:54:04 The best model epoch 19, val-acc 1.0000
-04-11 08:54:04 -----Epoch 27/30-----
-04-11 08:54:04 current lr: [0.0004, 0.0004]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 39.27it/s]100%|##########| 7/7 [00:00<00:00, 37.92it/s]
-04-11 08:54:04 Train-Loss Source Classifier: 0.0007
-04-11 08:54:04 Train-Loss Discriminator: 0.6537
-04-11 08:54:04 Train-Acc Source Data: 1.0000
-04-11 08:54:04 Train-Acc Discriminator: 65.6250
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 155.18it/s]
-04-11 08:54:04 Val-Acc Target Data: 0.9948
-04-11 08:54:04 The best model epoch 19, val-acc 1.0000
-04-11 08:54:04 -----Epoch 28/30-----
-04-11 08:54:04 current lr: [0.0004, 0.0004]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 38.94it/s]100%|##########| 7/7 [00:00<00:00, 38.43it/s]
-04-11 08:54:04 Train-Loss Source Classifier: 0.0007
-04-11 08:54:04 Train-Loss Discriminator: 0.6556
-04-11 08:54:04 Train-Acc Source Data: 1.0000
-04-11 08:54:04 Train-Acc Discriminator: 64.6205
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 154.11it/s]
-04-11 08:54:04 Val-Acc Target Data: 0.9844
-04-11 08:54:04 The best model epoch 19, val-acc 1.0000
-04-11 08:54:04 -----Epoch 29/30-----
-04-11 08:54:04 current lr: [0.0004, 0.0004]
-  0%|          | 0/7 [00:00<?, ?it/s] 57%|#####7    | 4/7 [00:00<00:00, 39.28it/s]100%|##########| 7/7 [00:00<00:00, 38.18it/s]
-04-11 08:54:04 Train-Loss Source Classifier: 0.0005
-04-11 08:54:04 Train-Loss Discriminator: 0.6579
-04-11 08:54:04 Train-Acc Source Data: 1.0000
-04-11 08:54:04 Train-Acc Discriminator: 64.8438
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 151.30it/s]
-04-11 08:54:04 Val-Acc Target Data: 0.9844
-04-11 08:54:04 The best model epoch 19, val-acc 1.0000
-04-11 08:54:04 -----Epoch 30/30-----
-04-11 08:54:04 current lr: [0.0004, 0.0004]
-  0%|          | 0/7 [00:00<?, ?it/s] 71%|#######1  | 5/7 [00:00<00:00, 38.12it/s]100%|##########| 7/7 [00:00<00:00, 37.96it/s]
-04-11 08:54:04 Train-Loss Source Classifier: 0.0006
-04-11 08:54:04 Train-Loss Discriminator: 0.6564
-04-11 08:54:04 Train-Acc Source Data: 1.0000
-04-11 08:54:04 Train-Acc Discriminator: 66.4062
-  0%|          | 0/3 [00:00<?, ?it/s]100%|##########| 3/3 [00:00<00:00, 155.60it/s]
-04-11 08:54:04 Val-Acc Target Data: 0.9844
-04-11 08:54:04 The best model epoch 19, val-acc 1.0000
