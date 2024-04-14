@@ -326,7 +326,7 @@ def visualize_tsne_and_confusion_matrix(features, all_labels, all_preds, cm, sav
         misclass_mask = class_mask & (all_labels != all_preds)
         ax1.scatter(transformed_features[misclass_mask, 0], transformed_features[misclass_mask, 1],
                     facecolors='none', edgecolors=[class_colors[pred] for pred in all_preds[misclass_mask]],
-                    linewidths=1, s=40, marker='o')
+                    linewidths=1, s=45, marker='o')
 
     ax1.set_title('t-SNE Visualization')
     ax1.set_xlabel('t-SNE Component 1')

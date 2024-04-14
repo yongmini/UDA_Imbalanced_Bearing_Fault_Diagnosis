@@ -1,0 +1,56 @@
+04-14 06:12:09 imba: True
+04-14 06:12:09 model_name: DANN
+04-14 06:12:09 Domain: CWRU
+04-14 06:12:09 source: JNU_1
+04-14 06:12:09 target: JNU_2
+04-14 06:12:09 data_dir: ./datasets
+04-14 06:12:09 train_mode: single_source
+04-14 06:12:09 cuda_device: 0
+04-14 06:12:09 save_dir: ./ckpt/DANN/single_source
+04-14 06:12:09 max_epoch: 300
+04-14 06:12:09 batch_size: 128
+04-14 06:12:09 num_workers: 0
+04-14 06:12:09 signal_size: 2048
+04-14 06:12:09 random_state: 2
+04-14 06:12:09 normlizetype: mean-std
+04-14 06:12:09 opt: sgd
+04-14 06:12:09 lr: 0.001
+04-14 06:12:09 momentum: 0.9
+04-14 06:12:09 betas: (0.9, 0.999)
+04-14 06:12:09 weight_decay: 0.0005
+04-14 06:12:09 lr_scheduler: stepLR
+04-14 06:12:09 gamma: 0.2
+04-14 06:12:09 steps: 10
+04-14 06:12:09 tradeoff: ['exp', 'exp', 'exp']
+04-14 06:12:09 dropout: 0.0
+04-14 06:12:09 save: False
+04-14 06:12:09 load_path: 
+04-14 06:12:09 tsne: True
+04-14 06:12:09 save_path: ./ckpt/DANN/single_source/[JNU_1]To[JNU_2]_0414-061209
+04-14 06:12:09 Detect 4 classes: ['1normal', 'ball', 'inner', 'outer']
+04-14 06:12:09 using 1 / 1 gpus
+Training data length: 1461
+Testing data length: 732
+Source Data Distribution:04-14 06:12:19 Source set JNU_1 number of samples 1460.
+
++--------------+---------+
+| Label        |   Count |
+|--------------+---------|
+| 0            |     365 |
+| 1            |     365 |
+| 2            |     365 |
+| 3            |     365 |
+| Dataset Size |    1460 |
++--------------+---------+
+Training data length: 1461
+Testing data length: 732
+Traceback (most recent call last):
+  File "train.py", line 89, in <module>
+    trainer = importlib.import_module(f"models.{args.model_name}").Trainset(args)
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/DANN.py", line 36, in __init__
+    self._init_data()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/train_utils.py", line 126, in _init_data
+    ).data_preprare(source_label=idx+1, is_src=False, random_state=args.random_state,imbalance_ratio=imbalance_ratio)
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/data_loader/data_load.py", line 112, in data_preprare
+    sampled_data = train_pd[train_pd["labels"] == label].sample(n=num_samples, random_state=self.args.random_state)
+AttributeError: 'dataset' object has no attribute 'args'

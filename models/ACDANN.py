@@ -118,6 +118,8 @@ class Trainset(InitTrain):
                 logits_dm = self.discriminator(feat)
                 loss_dm = F.cross_entropy(logits_dm, labels_dm)
                 loss = loss_c + tradeoff[0] * loss_dm
+
+          
                 
                 epoch_acc['Source Data']  += utils.get_accuracy(y_s, source_labels)
                 epoch_acc['Discriminator']  += utils.get_accuracy(logits_dm, labels_dm)
@@ -153,13 +155,13 @@ class Trainset(InitTrain):
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
     
-            self.epoch = epoch
-            if epoch == 1 or epoch % 5 == 0:
-                self.test_tsne()
+            # self.epoch = epoch
+            # if epoch == 1 or epoch % 5 == 0:
+            #     self.test_tsne()
                 
-        # if self.args.tsne:
-        #         self.test_tsne()
-        #       #  self.test_tsne_all()
+        if self.args.tsne:
+                self.test_tsne()
+              #  self.test_tsne_all()
             
     def test(self):
         self.model.eval()

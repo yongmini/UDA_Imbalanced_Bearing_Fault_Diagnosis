@@ -64,7 +64,7 @@ class Trainset(InitTrain):
             self.model.train()
             epoch_loss = defaultdict(float)
         
-            num_iter = len(self.dataloaders['train'])              
+            num_iter = len(self.dataloaders[src])              
             for i in tqdm(range(num_iter), ascii=True):
                 source_data, source_labels = utils.get_next_batch(self.dataloaders,
                                             self.iters, src, self.device)
@@ -110,7 +110,7 @@ class Trainset(InitTrain):
                 self.lr_scheduler.step()
                 
             self.epoch = epoch
-            if epoch == 1 or epoch % 5 == 0:
+            if epoch == 1 or epoch % 50 == 0:
                 self.test_tsne()
                 
         # if self.args.tsne:

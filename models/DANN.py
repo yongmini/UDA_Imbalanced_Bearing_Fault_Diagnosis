@@ -125,10 +125,10 @@ class Trainset(InitTrain):
             
             best_acc_formatted = f"{best_acc:.2f}"
             wandb.log({"best_target_acc": float(best_acc_formatted)})
-            
+    
             if self.args.tsne:
-              #  self.epoch = epoch
-                if epoch == 1 or epoch % 5 == 0:
+                self.epoch = epoch
+                if epoch == 1 or epoch % 50 == 0:
                     self.test_tsne()
                 
         # if self.args.tsne:
@@ -161,12 +161,12 @@ class Trainset(InitTrain):
                                                         shuffle=False,
                                                         drop_last=False,
                                                         pin_memory=(True if self.device == 'cuda' else False))
-                            for x in ['train']}
+                            for x in ['val']}
 
                 
         
    
-        iters = iter(self.dataloaders2['train'])#val
+        iters = iter(self.dataloaders2['val'])#val
         num_iter = len(iters)
         all_features = []
         all_labels = []
@@ -191,6 +191,7 @@ class Trainset(InitTrain):
 
         # Perform t-SNE and save plot
         filename = f"tsne_conmat_imba_{str(self.args.imba)}_{self.args.model_name}_{self.epoch}.png"
+
         visualize_tsne_and_confusion_matrix(all_features, all_labels,all_preds, cm, self.args.save_dir,filename)
         
         

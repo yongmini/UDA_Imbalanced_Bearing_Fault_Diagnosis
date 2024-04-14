@@ -62,6 +62,7 @@ class dataset(object):
     
     def __init__(self, data_dir, dataset, faults, signal_size, normlizetype, condition=2,
                  balance_data=True, test_size=0.2):
+
         self.balance_data = balance_data
         self.test_size = test_size
         self.num_classes = len(faults)
@@ -101,15 +102,21 @@ class dataset(object):
             val_pd = pd.DataFrame({"data": self.test_data, "labels": self.test_labels})
             val_pd = data_utils.balance_data(val_pd,random_state=random_state)
             
-            
             if imbalance_ratio is not None:
                 train_data = []
                 train_labels = []
                 for label, ratio in imbalance_ratio.items():
+                    # Calculate the number of samples to select for the current label
                     num_samples = int(len(train_pd[train_pd["labels"] == label]) * ratio)
-                    train_data += train_pd[train_pd["labels"] == label]["data"].tolist()[:num_samples]
-                    train_labels += train_pd[train_pd["labels"] == label]["labels"].tolist()[:num_samples]
                     
+                    # Randomly sample the required number of entries
+                    sampled_data = train_pd[train_pd["labels"] == label].sample(n=num_samples, random_state=random_state)
+                    
+                    # Extract data and labels from the sampled dataframe
+                    train_data += sampled_data["data"].tolist()
+                    train_labels += sampled_data["labels"].tolist()
+                
+                # Create a new DataFrame with the sampled data and labels
                 train_pd = pd.DataFrame({"data": train_data, "labels": train_labels})
             #######
                 # val_data = []
