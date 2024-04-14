@@ -109,8 +109,13 @@ class InitTrain(object):
             self.datasets[key].summary()
             
         if args.imba:
-            imbalance_ratio = {0:1, 1: 0.01, 2: 0.01, 3: 0.01}
-            wandb.log({"imba": imbalance_ratio})
+            if 'SEU' in args.Domain:
+                imbalance_ratio = {0:1, 1: 1, 2: 0.01, 3: 0.01, 4: 0.01, 5: 0.01, 6: 0.01, 7: 0.01, 8: 0.01, 9: 0.01}
+                wandb.log({"imba": imbalance_ratio})
+            else:
+                imbalance_ratio = {0:1, 1: 0.01, 2: 0.01, 3: 0.01, 4: 0.01}
+                wandb.log({"imba": imbalance_ratio})
+
         else:
             imbalance_ratio = None
 
