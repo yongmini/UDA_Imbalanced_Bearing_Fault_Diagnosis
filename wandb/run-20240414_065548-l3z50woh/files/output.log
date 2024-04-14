@@ -1,0 +1,75 @@
+04-14 06:55:49 imba: True
+04-14 06:55:49 model_name: CORAL
+04-14 06:55:49 Domain: CWRU_imba
+04-14 06:55:49 source: CWRU_0
+04-14 06:55:49 target: CWRU_1
+04-14 06:55:49 data_dir: ./datasets
+04-14 06:55:49 train_mode: single_source
+04-14 06:55:49 cuda_device: 0
+04-14 06:55:49 save_dir: ./ckpt/CORAL/single_source
+04-14 06:55:49 max_epoch: 300
+04-14 06:55:49 batch_size: 128
+04-14 06:55:49 num_workers: 0
+04-14 06:55:49 signal_size: 2048
+04-14 06:55:49 random_state: 75
+04-14 06:55:49 normlizetype: mean-std
+04-14 06:55:49 opt: sgd
+04-14 06:55:49 lr: 0.001
+04-14 06:55:49 momentum: 0.9
+04-14 06:55:49 betas: (0.9, 0.999)
+04-14 06:55:49 weight_decay: 0.0005
+04-14 06:55:49 lr_scheduler: stepLR
+04-14 06:55:49 gamma: 0.2
+04-14 06:55:49 steps: 10
+04-14 06:55:49 tradeoff: ['exp', 'exp', 'exp']
+04-14 06:55:49 dropout: 0.0
+04-14 06:55:49 save: False
+04-14 06:55:49 load_path: 
+04-14 06:55:49 tsne: False
+04-14 06:55:49 save_path: ./ckpt/CORAL/single_source/[CWRU_0]To[CWRU_1]_0414-065549
+04-14 06:55:49 Detect 4 classes: ['1normal', 'ball', 'inner', 'outer']
+04-14 06:55:49 using 1 / 1 gpus
+Training data length: 759
+Testing data length: 380
+Source Data Distribution:04-14 06:55:52 Source set CWRU_0 number of samples 1044.
+
++--------------+---------+
+| Label        |   Count |
+|--------------+---------|
+| 0            |     261 |
+| 1            |     261 |
+| 2            |     261 |
+| 3            |     261 |
+| Dataset Size |    1044 |
++--------------+---------+
+Training data length: 757
+Testing data length: 379
+Target Data Distribution:
++--------------+---------+-------+
+|              |   train |   val |
+|--------------+---------+-------|
+| 0            |     174 |    87 |
+| 1            |       1 |    87 |
+| 2            |       1 |    87 |
+| 3            |       1 |    87 |
+| Dataset Size |     177 |   348 |
++--------------+---------+-------+
+04-14 06:55:52 target training set number of samples 177.
+04-14 06:55:52 target validation set number of samples 348.
+04-14 06:55:52 -----Epoch 1/300-----
+04-14 06:55:52 current lr: [0.001]
+  0%|          | 0/1 [00:00<?, ?it/s]100%|##########| 1/1 [00:00<00:00, 14.09it/s]
+04-14 06:55:52 Train-Loss Source Classifier: 1.3868
+04-14 06:55:52 Train-Loss CORAL: 0.3887
+04-14 06:55:52 Train-Acc Source Data: 0.2344
+  0%|          | 0/3 [00:00<?, ?it/s]  0%|          | 0/3 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "train.py", line 95, in <module>
+    trainer.train()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/CORAL.py", line 123, in train
+    new_acc = self.test()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/CORAL.py", line 150, in test
+    acc += utils.get_accuracy(pred, target_labels)
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/utils.py", line 13, in get_accuracy
+    assert preds.shape[0] == targets.shape[0]
+AttributeError: 'tuple' object has no attribute 'shape'

@@ -172,7 +172,7 @@ class Trainset(InitTrain):
             for i in tqdm(range(num_iter), ascii=True):
                 target_data, target_labels, _ = next(iters)
                 target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
-                pred,_ = self.model(target_data)
+                pred = self.model(target_data)
                 acc += utils.get_accuracy(pred, target_labels)
         acc /= num_iter
         logging.info('Val-Acc Target Data: {:.4f}'.format(acc))
@@ -222,128 +222,5 @@ class Trainset(InitTrain):
         visualize_tsne_and_confusion_matrix(all_features, all_labels,all_preds, cm, self.args.save_dir,filename)
         
         
-    # def test_tsne_all(self):
-    #     self.model.eval()
-    #     source_iter = iter(self.dataloaders[self.args.source_name[0]])  # Source data iterator 추가
-    #     target_iter = iter(self.dataloaders['val'])
-        
-    #     all_features = []
-    #     all_labels = []
-    #     all_domains = []  # Source인지 Target인지를 구분하는 레이블 추가
-        
-    #     with torch.no_grad():
-    #         for _ in range(len(target_iter)):
-    #             source_data, source_labels ,_ = next(source_iter)
-    #             target_data, target_labels, _ = next(target_iter)
-                
-    #             source_data, source_labels = source_data.to(self.device), source_labels.to(self.device)
-    #             target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
-                
-    #             _, source_features = self.model(source_data)
-    #             _, target_features = self.model(target_data)
-                
-    #             all_features.append(source_features.cpu().numpy())
-    #             all_features.append(target_features.cpu().numpy())
-                
-    #             all_labels.append(source_labels.cpu().numpy())
-    #             all_labels.append(target_labels.cpu().numpy())
-                
-    #             all_domains.append(np.zeros_like(source_labels.cpu().numpy()))  # Source는 0
-    #             all_domains.append(np.ones_like(target_labels.cpu().numpy()))   # Target은 1
-        
-    #     all_features = np.concatenate(all_features, axis=0)
-    #     all_labels = np.concatenate(all_labels, axis=0)
-    #     all_domains = np.concatenate(all_domains, axis=0)
-        
-        
-        
-    #     tsne = TSNE(n_components=2, perplexity=30, random_state=42)
-    #     features_tsne = tsne.fit_transform(all_features)
-        
-    #     # 시각화를 위한 색상 맵 설정
-    #     num_classes = len(np.unique(all_labels))
-    #     colors = plt.cm.rainbow(np.linspace(0, 1, num_classes))
-        
-    #     # Source와 Target에 대한 t-SNE 그래프 그리기
-    #     fig, ax = plt.subplots(figsize=(8, 8))
-    #     markers = ['o', 'x']  # Source는 'o', Target은 'x'로 표시
-    #     for i, domain in enumerate(['Source', 'Target']):
-    #         mask = all_domains == i
-    #         for j, label in enumerate(np.unique(all_labels)):
-    #             label_mask = all_labels[mask] == label
-    #             ax.scatter(features_tsne[mask][label_mask, 0], features_tsne[mask][label_mask, 1],
-    #                     color=colors[j], marker=markers[i], label=f'{domain} - Class {label}', alpha=0.8)
-        
-        
-    #     ax.set_xlabel('t-SNE Feature 1')
-    #     ax.set_ylabel('t-SNE Feature 2')
-    #     ax.set_title('t-SNE Visualization of Source and Target Domains')
-    #     ax.legend()
-        
-    #     # t-SNE 그래프 저장
-    #     plt.tight_layout()
-    #     plt.savefig(os.path.join(self.args.save_dir, 'domain_tsne.png'), dpi=300)
-    #     plt.close()
-            
-    def test_tsne_all(self):
-        self.model.eval()
-        source_iter = iter(self.dataloaders[self.args.source_name[0]])  # Source data iterator 추가
-        target_iter = iter(self.dataloaders['val'])
-        
-        all_features = []
-        all_labels = []
-        all_domains = []  # Source인지 Target인지를 구분하는 레이블 추가
-        
-        with torch.no_grad():
-            for _ in range(len(target_iter)):
-                source_data, source_labels, _ = next(source_iter)
-                target_data, target_labels, _ = next(target_iter)
-                
-                source_data, source_labels = source_data.to(self.device), source_labels.to(self.device)
-                target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
-                
-                _, source_features = self.model(source_data)
-                _, target_features = self.model(target_data)
-                
-                all_features.append(source_features.cpu().numpy())
-                all_features.append(target_features.cpu().numpy())
-                
-                all_labels.append(source_labels.cpu().numpy())
-                all_labels.append(target_labels.cpu().numpy())
-                
-                all_domains.append(np.zeros_like(source_labels.cpu().numpy()))  # Source는 0
-                all_domains.append(np.ones_like(target_labels.cpu().numpy()))   # Target은 1
-        
-        all_features = np.concatenate(all_features, axis=0)
-        all_labels = np.concatenate(all_labels, axis=0)
-        all_domains = np.concatenate(all_domains, axis=0)
-        
-        tsne = TSNE(n_components=3, perplexity=30, random_state=42)  # n_components를 3으로 설정
-        features_tsne = tsne.fit_transform(all_features)
-        
-        # 시각화를 위한 색상 맵 설정
-        num_classes = len(np.unique(all_labels))
-        colors = plt.cm.rainbow(np.linspace(0, 1, num_classes))
-        
-        # Source와 Target에 대한 3D t-SNE 그래프 그리기
-        fig = plt.figure(figsize=(8, 8))
-        ax = fig.add_subplot(111, projection='3d')  # 3D 그래프를 그리기 위한 Axes3D 사용
-        markers = ['o', 'x']  # Source는 'o', Target은 'x'로 표시
-        for i, domain in enumerate(['Source', 'Target']):
-            mask = all_domains == i
-            for j, label in enumerate(np.unique(all_labels)):
-                label_mask = all_labels[mask] == label
-                ax.scatter(features_tsne[mask][label_mask, 0], features_tsne[mask][label_mask, 1], features_tsne[mask][label_mask, 2],
-                        color=colors[j], marker=markers[i], label=f'{domain} - Class {label}', alpha=0.8)
-        
-        ax.set_xlabel('t-SNE Feature 1')
-        ax.set_ylabel('t-SNE Feature 2')
-        ax.set_zlabel('t-SNE Feature 3')  # z축 레이블 추가
-        ax.set_title('3D t-SNE Visualization of Source and Target Domains')
-        ax.legend()
-        filename = f'domain_tsne_3d_imba_{self.args.imba}.png'
-        # 3D t-SNE 그래프 저장
-        plt.tight_layout()
-        plt.savefig(os.path.join(self.args.save_dir, filename), dpi=300)
-        plt.close()
+
             

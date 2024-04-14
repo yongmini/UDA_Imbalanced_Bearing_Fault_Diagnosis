@@ -1,0 +1,51 @@
+04-14 07:38:48 imba: False
+04-14 07:38:48 model_name: CORAL
+04-14 07:38:48 Domain: CWRU
+04-14 07:38:48 source: CWRU_1
+04-14 07:38:48 target: CWRU_2
+04-14 07:38:48 data_dir: ./datasets
+04-14 07:38:48 train_mode: single_source
+04-14 07:38:48 cuda_device: 0
+04-14 07:38:48 save_dir: ./ckpt/CORAL/single_source
+04-14 07:38:48 max_epoch: 30
+04-14 07:38:48 batch_size: 32
+04-14 07:38:48 num_workers: 0
+04-14 07:38:48 signal_size: 2048
+04-14 07:38:48 random_state: 75
+04-14 07:38:48 normlizetype: mean-std
+04-14 07:38:48 opt: sgd
+04-14 07:38:48 lr: 0.001
+04-14 07:38:48 momentum: 0.9
+04-14 07:38:48 betas: (0.9, 0.999)
+04-14 07:38:48 weight_decay: 0.0005
+04-14 07:38:48 lr_scheduler: stepLR
+04-14 07:38:48 gamma: 0.2
+04-14 07:38:48 steps: 10
+04-14 07:38:48 tradeoff: ['exp', 'exp', 'exp']
+04-14 07:38:48 dropout: 0.0
+04-14 07:38:48 save: False
+04-14 07:38:48 load_path: 
+04-14 07:38:48 tsne: False
+04-14 07:38:48 save_path: ./ckpt/CORAL/single_source/[CWRU_1]To[CWRU_2]_0414-073848
+04-14 07:38:48 Detect 4 classes: ['1normal', 'ball', 'inner', 'outer']
+04-14 07:38:48 using 1 / 1 gpus
+04-14 07:38:51 Source set CWRU_1 number of samples 767.
+04-14 07:38:51 Training set number of samples 611.
+04-14 07:38:51 Validation set number of samples 156.
+04-14 07:38:51 -----Epoch 1/30-----
+04-14 07:38:51 current lr: [0.001]
+  0%|          | 0/19 [00:00<?, ?it/s] 16%|#5        | 3/19 [00:00<00:00, 27.55it/s] 42%|####2     | 8/19 [00:00<00:00, 36.60it/s] 68%|######8   | 13/19 [00:00<00:00, 40.97it/s] 95%|#########4| 18/19 [00:00<00:00, 42.52it/s]100%|##########| 19/19 [00:00<00:00, 40.38it/s]
+04-14 07:38:52 Train-Loss Source Classifier: 1.2522
+04-14 07:38:52 Train-Loss CORAL: 0.0783
+04-14 07:38:52 Train-Acc Source Data: 0.4309
+  0%|          | 0/4 [00:00<?, ?it/s]  0%|          | 0/4 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "train.py", line 95, in <module>
+    trainer.train()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/CORAL.py", line 123, in train
+    new_acc = self.test()
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/models/CORAL.py", line 142, in test
+    acc += utils.get_accuracy(pred, target_labels)
+  File "/home/workspace/UDA_Bearing_Fault_Diagnosis/utils.py", line 13, in get_accuracy
+    assert preds.shape[0] == targets.shape[0]
+AttributeError: 'tuple' object has no attribute 'shape'

@@ -133,9 +133,11 @@ class Trainset(InitTrain):
             
             best_acc_formatted = f"{best_acc:.2f}"
             wandb.log({"best_target_acc": float(best_acc_formatted)})
-            
+
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
+                
+ 
             
     def test(self):
         self.model.eval()

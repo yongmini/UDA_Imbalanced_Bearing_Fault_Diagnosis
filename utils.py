@@ -314,13 +314,16 @@ def visualize_tsne_and_confusion_matrix(features, all_labels, all_preds, cm, sav
     class_colors = {0: 'blue', 1: 'green', 2: 'orange', 3: 'red'}
     edge_colors = [class_colors[pred] for pred in all_preds]  # Colors for misclassified edges
 
+    # Class names mapped to their respective labels
+    class_names = {0: 'Normal', 1: 'Ball', 2: 'Inner', 3: 'Outer'}
+
     # Visualize t-SNE
     for label in np.unique(all_labels):
         idx_color = class_colors[label]
         # Points of the current class
         class_mask = all_labels == label
         ax1.scatter(transformed_features[class_mask, 0], transformed_features[class_mask, 1],
-                    label=f'Class {label}', color=idx_color, s=40)
+                    label=f'{class_names[label]}', color=idx_color, s=40)
 
         # Highlight misclassified points with predicted class color edges
         misclass_mask = class_mask & (all_labels != all_preds)
@@ -335,7 +338,7 @@ def visualize_tsne_and_confusion_matrix(features, all_labels, all_preds, cm, sav
 
     # Visualize confusion matrix
     sns.heatmap(cm, annot=True, cmap='Blues', fmt='d', ax=ax2,
-                xticklabels=[0, 1, 2, 3], yticklabels=[0, 1, 2, 3])
+                xticklabels=[class_names[i] for i in range(4)], yticklabels=[class_names[i] for i in range(4)])
     ax2.set_title('Confusion Matrix')
     ax2.set_xlabel('Predicted Labels')
     ax2.set_ylabel('True Labels')
@@ -345,5 +348,7 @@ def visualize_tsne_and_confusion_matrix(features, all_labels, all_preds, cm, sav
     plt.tight_layout()
     plt.savefig(save_path)
     plt.close()
+
+    return save_path
 
     return save_path

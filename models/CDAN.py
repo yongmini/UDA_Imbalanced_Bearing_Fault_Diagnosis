@@ -237,7 +237,7 @@ class Trainset(InitTrain):
             for i in tqdm(range(num_iter), ascii=True):
                 target_data, target_labels, _ = next(iters)
                 target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
-                pred,_ = self.model(target_data)
+                pred = self.model(target_data)
                 acc += utils.get_accuracy(pred, target_labels)
         acc /= num_iter
         logging.info('Val-Acc Target Data: {:.4f}'.format(acc))

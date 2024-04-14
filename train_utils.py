@@ -97,15 +97,12 @@ class InitTrain(object):
                 idx = i
             if '_' in source:
                 src, condition = source.split('_')[0], int(source.split('_')[1])
+                print(f"Loading source: {src}, Condition: {condition}")  # Added print for source and condition
                 data_root = os.path.join(args.data_dir, src)
-                Dataset = importlib.import_module("data_loader.data_load").dataset
+                Dataset = importlib.import_module("data_loader.source_load").dataset
                 self.datasets[source] = Dataset(data_root, src, args.faults, args.signal_size, args.normlizetype, condition=condition
                                                 ).data_preprare(source_label=idx, is_src=True, random_state=args.random_state)
-            # else:
-            #     data_root = os.path.join(args.data_dir, source)
-            #     Dataset = importlib.import_module("data_loader.load").dataset
-            #     self.datasets[source] = Dataset(data_root, source, args.faults, args.signal_size, args.normlizetype
-            #                                     ).data_preprare(source_label=idx, is_src=True, random_state=args.random_state) 
+
         for key in self.datasets.keys():
             logging.info('Source set {} number of samples {}.'.format(key, len(self.datasets[key])))
             wandb.log({f"Source Set {key} Size": len(self.datasets[key])})
@@ -114,25 +111,19 @@ class InitTrain(object):
         if args.imba:
             imbalance_ratio = {0:1, 1: 0.01, 2: 0.01, 3: 0.01}
             wandb.log({"imba": imbalance_ratio})
-        else :
-             imbalance_ratio = None
-        
-        
+        else:
+            imbalance_ratio = None
+
         if '_' in args.target:
             tgt, condition = args.target.split('_')[0], int(args.target.split('_')[1])
+            print(f"Setting up target: {tgt}, Condition: {condition}")  # Added print for target and condition
             data_root = os.path.join(args.data_dir, tgt)
-            Dataset = importlib.import_module("data_loader.data_load").dataset
+            Dataset = importlib.import_module("data_loader.target_load").dataset
             self.datasets['train'], self.datasets['val'] = Dataset(data_root, tgt, args.faults, args.signal_size, args.normlizetype, condition=condition
-                                                                   ).data_preprare(source_label=idx+1, is_src=False, random_state=args.random_state,imbalance_ratio=imbalance_ratio)
+                                                                ).data_preprare(source_label=idx+1, is_src=False, random_state=args.random_state, imbalance_ratio=imbalance_ratio)
+
        
-        
-        
-        
-        # else:
-        #     data_root = os.path.join(args.data_dir, args.target)
-        #     Dataset = importlib.import_module("data_loader.load").dataset
-        #     self.datasets['train'], self.datasets['val'] = Dataset(data_root, args.target, args.faults, args.signal_size, args.normlizetype
-        #                                                             ).data_preprare(source_label=idx+1, is_src=False, random_state=args.random_state)           
+    
         logging.info('target training set number of samples {}.'.format(len(self.datasets['train'])))
         wandb.log({"target training Set Size": len(self.datasets['train'])})
         self.datasets['train'].summary()
@@ -151,7 +142,7 @@ class InitTrain(object):
         self.dataloaders = {x: torch.utils.data.DataLoader(self.datasets[x],
                                               batch_size=args.batch_size,
                                               shuffle=(False if x == 'val' else True),
-                                              num_workers=args.num_workers, drop_last=True,#,(False if x == 'val' else True),
+                                              num_workers=args.num_workers, drop_last=(False if x == 'val' else True),
                                               pin_memory=(True if self.device == 'cuda' else False))
                                               for x in dataset_keys}
         self.iters = {x: iter(self.dataloaders[x]) for x in dataset_keys}

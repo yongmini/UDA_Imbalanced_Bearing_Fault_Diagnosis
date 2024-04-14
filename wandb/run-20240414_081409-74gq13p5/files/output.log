@@ -1,0 +1,76 @@
+04-14 08:14:09 imba: False
+04-14 08:14:09 model_name: CNN
+04-14 08:14:09 Domain: CWRU
+04-14 08:14:09 source: CWRU_1
+04-14 08:14:09 target: JNU_2
+04-14 08:14:09 data_dir: ./datasets
+04-14 08:14:09 train_mode: single_source
+04-14 08:14:09 cuda_device: 0
+04-14 08:14:09 save_dir: ./ckpt/CNN/single_source
+04-14 08:14:09 max_epoch: 30
+04-14 08:14:09 batch_size: 32
+04-14 08:14:09 num_workers: 0
+04-14 08:14:09 signal_size: 2048
+04-14 08:14:09 random_state: 75
+04-14 08:14:09 normlizetype: mean-std
+04-14 08:14:09 opt: sgd
+04-14 08:14:09 lr: 0.001
+04-14 08:14:09 momentum: 0.9
+04-14 08:14:09 betas: (0.9, 0.999)
+04-14 08:14:09 weight_decay: 0.0005
+04-14 08:14:09 lr_scheduler: stepLR
+04-14 08:14:09 gamma: 0.2
+04-14 08:14:09 steps: 10
+04-14 08:14:09 tradeoff: ['exp', 'exp', 'exp']
+04-14 08:14:09 dropout: 0.0
+04-14 08:14:09 save: False
+04-14 08:14:09 load_path: 
+04-14 08:14:09 tsne: False
+04-14 08:14:09 save_path: ./ckpt/CNN/single_source/[CWRU_1]To[JNU_2]_0414-081409
+04-14 08:14:09 Detect 4 classes: ['1normal', 'ball', 'inner', 'outer']
+04-14 08:14:10 using 1 / 1 gpus
+Loading source: CWRU, Condition: 1
+Training source data len;L'gth: 767
+Training target data lengK'th: 379
+Testing target data lenK'gth: 379
+04-14 08:14:13 Source set CWRU_1 number of samples 708.
+Source Data Distribution:
++--------------+---------+
+| Label        |   Count |
+|--------------+---------|
+| 0            |     177 |
+| 1            |     177 |
+| 2            |     177 |
+| 3            |     177 |
+| Dataset Size |     708 |
++--------------+---------+
+Setting up target: JNU, Condition: 2
+Training source data len;L'gth: 1465
+Training target data lengK'th: 732
+Testing target data lenK'gth: 732
+Target Data Distribution:
++--------------+---------+-------+
+|              |   train |   val |
+|--------------+---------+-------|
+| 0            |     122 |   122 |
+| 1            |     122 |   122 |
+| 2            |     122 |   122 |
+| 3            |     122 |   122 |
+| Dataset Size |     488 |   488 |
++--------------+---------+-------+
+04-14 08:14:27 target training set number of samples 488.
+04-14 08:14:27 target validation set number of samples 488.
+04-14 08:14:27 -----Epoch 1/30-----
+04-14 08:14:27 current lr: [0.001]
+  0%|          | 0/15 [00:00<?, ?it/s] 27%|##6       | 4/15 [00:00<00:00, 32.53it/s] 60%|######    | 9/15 [00:00<00:00, 39.14it/s] 93%|#########3| 14/15 [00:00<00:00, 41.51it/s]100%|##########| 15/15 [00:00<00:00, 40.40it/s]
+04-14 08:14:28 Train-Loss Source Classifier: 1.3119
+04-14 08:14:28 Train-Acc Source Data: 0.4375
+  0%|          | 0/15 [00:00<?, ?it/s]100%|##########| 15/15 [00:00<00:00, 197.84it/s]
+04-14 08:14:28 Val-Acc Target Data: 0.2833
+04-14 08:14:28 The best model epoch 1, val-acc 0.2833
+04-14 08:14:28 -----Epoch 2/30-----
+04-14 08:14:28 current lr: [0.001]
+  0%|          | 0/15 [00:00<?, ?it/s] 40%|####      | 6/15 [00:00<00:00, 49.33it/s] 73%|#######3  | 11/15 [00:00<00:00, 48.34it/s]100%|##########| 15/15 [00:00<00:00, 47.56it/s]
+04-14 08:14:28 Train-Loss Source Classifier: 0.9954
+04-14 08:14:28 Train-Acc Source Data: 0.7812
+  0%|          | 0/15 [00:00<?, ?it/s]

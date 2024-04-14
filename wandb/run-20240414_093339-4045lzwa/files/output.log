@@ -1,0 +1,75 @@
+04-14 09:33:40 imba: False
+04-14 09:33:40 model_name: CNN
+04-14 09:33:40 Domain: CWRU
+04-14 09:33:40 source: CWRU_1
+04-14 09:33:40 target: CWRU_0
+04-14 09:33:40 data_dir: ./datasets
+04-14 09:33:40 train_mode: single_source
+04-14 09:33:40 cuda_device: 0
+04-14 09:33:40 save_dir: ./ckpt/CNN/single_source
+04-14 09:33:40 max_epoch: 100
+04-14 09:33:40 batch_size: 64
+04-14 09:33:40 num_workers: 0
+04-14 09:33:40 signal_size: 2048
+04-14 09:33:40 random_state: 75
+04-14 09:33:40 normlizetype: mean-std
+04-14 09:33:40 opt: sgd
+04-14 09:33:40 lr: 0.001
+04-14 09:33:40 momentum: 0.9
+04-14 09:33:40 betas: (0.9, 0.999)
+04-14 09:33:40 weight_decay: 0.0005
+04-14 09:33:40 lr_scheduler: stepLR
+04-14 09:33:40 gamma: 0.2
+04-14 09:33:40 steps: 10
+04-14 09:33:40 tradeoff: ['exp', 'exp', 'exp']
+04-14 09:33:40 dropout: 0.0
+04-14 09:33:40 save: False
+04-14 09:33:40 load_path: 
+04-14 09:33:40 tsne: False
+04-14 09:33:40 save_path: ./ckpt/CNN/single_source/[CWRU_1]To[CWRU_0]_0414-093340
+04-14 09:33:40 Detect 4 classes: ['1normal', 'ball', 'inner', 'outer']
+04-14 09:33:43 using 1 / 1 gpus
+Loading source: CWRU, Condition: 1
+Source Data Distribution:
+04-14 09:33:46 Source set CWRU_1 number of samples 708.
++--------------+---------+
+| Label        |   Count |
+|--------------+---------|
+| 0            |     177 |
+| 1            |     177 |
+| 2            |     177 |
+| 3            |     177 |
+| Dataset Size |     708 |
++--------------+---------+
+Setting up target: CWRU, Condition: 0
+Target Data Distribution:
+04-14 09:33:46 target training set number of samples 348.
++--------------+---------+-------+
+|              |   train |   val |
+|--------------+---------+-------|
+| 0            |      87 |    87 |
+| 1            |      87 |    87 |
+| 2            |      87 |    87 |
+| 3            |      87 |    87 |
+| Dataset Size |     348 |   348 |
++--------------+---------+-------+
+04-14 09:33:46 target validation set number of samples 348.
+04-14 09:33:46 -----Epoch 1/100-----
+04-14 09:33:46 current lr: [0.001]
+  0%|          | 0/5 [00:00<?, ?it/s] 60%|######    | 3/5 [00:00<00:00, 27.87it/s]100%|##########| 5/5 [00:00<00:00, 31.75it/s]
+04-14 09:33:46 Train-Loss Source Classifier: 1.3881
+04-14 09:33:46 Train-Acc Source Data: 0.2375
+  0%|          | 0/6 [00:00<?, ?it/s]100%|##########| 6/6 [00:00<00:00, 157.39it/s]
+04-14 09:33:46 Val-Acc Target Data: 0.2266
+04-14 09:33:46 The best model epoch 1, val-acc 0.2266
+04-14 09:33:46 -----Epoch 2/100-----
+04-14 09:33:46 current lr: [0.001]
+  0%|          | 0/5 [00:00<?, ?it/s]100%|##########| 5/5 [00:00<00:00, 43.72it/s]100%|##########| 5/5 [00:00<00:00, 43.67it/s]
+04-14 09:33:46 Train-Loss Source Classifier: 1.3063
+04-14 09:33:46 Train-Acc Source Data: 0.5250
+  0%|          | 0/6 [00:00<?, ?it/s]100%|##########| 6/6 [00:00<00:00, 156.23it/s]
+04-14 09:33:46 Val-Acc Target Data: 0.2266
+04-14 09:33:46 The best model epoch 2, val-acc 0.2266
+04-14 09:33:46 -----Epoch 3/100-----
+04-14 09:33:46 current lr: [0.001]
+  0%|          | 0/5 [00:00<?, ?it/s]

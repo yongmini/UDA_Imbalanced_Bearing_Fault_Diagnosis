@@ -5,15 +5,15 @@ def parse_args():
  
 
     # basic parameters
-    parser.add_argument('--imba', type=bool, default=True, help='Save logs and trained model checkpoints')
-    parser.add_argument('--model_name', type=str, default='CNN',
+    parser.add_argument('--imba', type=bool, default=False, help='Save logs and trained model checkpoints')
+    parser.add_argument('--model_name', type=str, default='DANN',
                         help='Name of the model (in ./models directory)')
-    parser.add_argument('--Domain', type=str, default='CWRU')
-    parser.add_argument('--source', type=str, default='CWRU_1',
-                        help='Source data, separated by "," (select specific conditions of the dataset with name_number, such as CWRU_0)')
-    parser.add_argument('--target', type=str, default='CWRU_2',
+    parser.add_argument('--Domain', type=str, default='SEU')
+    parser.add_argument('--source', type=str, default='SEU_1',
+                        help='Source data, separated by "," (select specific conditions of the dataset with name_number, such as SEU_0)')
+    parser.add_argument('--target', type=str, default='SEU_0',
                         help='Target data (select specific conditions of the dataset with name_number, such as CWRU_0)')
-    parser.add_argument('--data_dir', type=str, default="./datasets",
+    parser.add_argument('--data_dir', type=str, default="/home/workspace/UDA_Bearing_Fault_Diagnosis/datasets",
                         help='Directory of the datasets')
     parser.add_argument('--train_mode', type=str, default='single_source',
                         choices=['single_source', 'source_combine', 'multi_source'],
@@ -22,9 +22,9 @@ def parse_args():
                         help='Allocate the device to use only one GPU ('' means using cpu)')
     parser.add_argument('--save_dir', type=str, default='./ckpt',
                         help='Directory to save logs and model checkpoints')
-    parser.add_argument('--max_epoch', type=int, default=30,
+    parser.add_argument('--max_epoch', type=int, default=100,
                         help='Number of epochs')
-    parser.add_argument('--batch_size', type=int, default=128,
+    parser.add_argument('--batch_size', type=int, default=64,
                         help='Batch size')
     parser.add_argument('--num_workers', type=int, default=0,
                         help='Number of workers for dataloader')

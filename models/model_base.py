@@ -130,7 +130,7 @@ class BaseModel(nn.Module):
     def forward(self, input):
         f = self.G(input)
         predictions = self.C(f)
-        # if self.training:
-        return predictions, f
-        # else:
-        #     return predictions
+        if self.training:
+            return predictions, f
+        else:
+            return predictions
