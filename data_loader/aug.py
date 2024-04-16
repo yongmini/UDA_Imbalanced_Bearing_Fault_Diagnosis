@@ -103,6 +103,31 @@ class RandomCrop(object):
             seq[:, random_index:random_index+self.crop_len] = 0
             return seq
 
+class RandomShuffleSegments(object):
+    def __init__(self, num_segments=4):
+        self.num_segments = num_segments
+
+    def __call__(self, seq):
+        # Check if the number of segments is a divisor of the sequence length
+        if seq.shape[1] % self.num_segments != 0:
+            raise ValueError("Sequence length must be divisible by the number of segments.")
+
+        segment_length = seq.shape[1] // self.num_segments
+        segments = []
+
+        # Split the sequence into segments
+        for i in range(self.num_segments):
+            start_index = i * segment_length
+            end_index = start_index + segment_length
+            segments.append(seq[:, start_index:end_index])
+
+        # Shuffle the segments
+        np.random.shuffle(segments)
+
+        # Concatenate the shuffled segments
+        shuffled_seq = np.concatenate(segments, axis=1)
+        return shuffled_seq
+
 
 class Normalize(object):
     def __init__(self, norm_type = "0-1"):

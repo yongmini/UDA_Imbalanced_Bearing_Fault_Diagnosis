@@ -68,7 +68,11 @@ def get_next_batch(loaders, iters, src, device, return_idx=False):
         return inputs.to(device), labels.to(device), src_idx.to(device)
     else:
         return inputs.to(device), labels.to(device)
-
+    
+def get_next_batch_balanced(loaders,device):
+    inputs, labels = None, None
+    inputs, labels = iter(loaders)
+    return inputs.to(device), labels.to(device)
 
 def get_concat_dataset_next_batch(loaders, iters, src, device, return_idx=False):
     inputs, labels = None, None

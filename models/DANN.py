@@ -15,26 +15,30 @@ from train_utils import InitTrain
 from utils import visualize_tsne_and_confusion_matrix
 import numpy as np     
 from sklearn.metrics import confusion_matrix
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.manifold import TSNE
 import os
-from mpl_toolkits.mplot3d import Axes3D
-
-
+from collections import Counter
+from torch.utils.data import DataLoader, WeightedRandomSampler, Subset
+from torch.utils.data import Dataset, DataLoader
+import torchvision.transforms as transforms
+import aug
+import data_utils
+    
+    
 class Trainset(InitTrain):
     
     def __init__(self, args):
         super(Trainset, self).__init__(args)
-        output_size = 192
+        output_size = 2560
         self.model = model_base.BaseModel(input_size=1, num_classes=args.num_classes,
                                      dropout=args.dropout).to(self.device)
         self.domain_discri = model_base.ClassifierMLP(input_size=output_size, output_size=1,
                         dropout=args.dropout, last='sigmoid').to(self.device)
         grl = utils.GradientReverseLayer() 
         self.domain_adv = utils.DomainAdversarialLoss(self.domain_discri, grl=grl)
+                  
         self._init_data()
-    
+        
+  
     def save_model(self):
         torch.save({
             'model': self.model.state_dict()
@@ -128,13 +132,20 @@ class Trainset(InitTrain):
     
             if self.args.tsne:
                 self.epoch = epoch
-                if epoch == 1 or epoch % 50 == 0:
+                if epoch == 1 or epoch % 5 == 0:
                     self.test_tsne()
                 
-            
+     
+        self.test()
+    
+
+                
+        
     def test(self):
         self.model.eval()
         acc = 0.0
+        
+        
         iters = iter(self.dataloaders['val'])
         num_iter = len(iters)
         with torch.no_grad():
@@ -143,10 +154,12 @@ class Trainset(InitTrain):
                 target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
                 pred = self.model(target_data)
                 acc += utils.get_accuracy(pred, target_labels)
+
         acc /= num_iter
         logging.info('Val-Acc Target Data: {:.4f}'.format(acc))
         return acc
-    
+
+
     
     def test_tsne(self):
         self.model.eval()
@@ -158,26 +171,38 @@ class Trainset(InitTrain):
                                                         shuffle=False,
                                                         drop_last=False,
                                                         pin_memory=(True if self.device == 'cuda' else False))
-                            for x in ['val']}
+                            for x in ['train']}
 
                 
         
    
-        iters = iter(self.dataloaders2['val'])#val
+        iters = iter(self.dataloaders2['train'])#val
         num_iter = len(iters)
         all_features = []
         all_labels = []
         all_preds = [] 
+        all_classifications = []
         with torch.no_grad():
             for i in tqdm(range(num_iter), ascii=True):
                 target_data, target_labels, _ = next(iters)
                 target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
                 pred, features = self.model(target_data)
-                
+                probabilities = F.softmax(pred, dim=1)
                 pred=pred.argmax(dim=1)
                 all_features.append(features.cpu().numpy())
                 all_labels.append(target_labels.cpu().numpy())
                 all_preds.append(pred.cpu().numpy())
+
+                # Process each sample
+                for label, prediction, confidence in zip(target_labels, pred, probabilities):
+                    if label != prediction:
+                        # Misclassified
+                        all_classifications.append(['Incorrect', label.item(), prediction.item()] + confidence.tolist())
+                    else:
+                        # Correctly classified
+                        all_classifications.append(['Correct', label.item(), prediction.item()] + confidence.tolist())
+
+
 
         # Concatenate features and labels
         all_features = np.concatenate(all_features, axis=0)
@@ -185,9 +210,12 @@ class Trainset(InitTrain):
         all_preds = np.concatenate(all_preds, axis=0)
         
         cm = confusion_matrix(all_labels, all_preds)
+        classification_filename = f"classifications_{self.args.imba}_{self.args.model_name}_{self.epoch}.txt"
+        header = "Classification_Status TrueLabel PredictedLabel " + " ".join(f"Conf_Class{i}" for i in range(probabilities.shape[1]))
+        np.savetxt(os.path.join(self.args.save_dir, classification_filename), np.array(all_classifications), fmt='%s', header=header)
 
         # Perform t-SNE and save plot
-        filename = f"tsne_conmat_imba_{str(self.args.imba)}_{self.args.model_name}_{self.epoch}.png"
+        filename = f"tsne_conmat_imba_unlabel_{str(self.args.imba)}_{self.args.model_name}_{self.epoch}.png"
 
         visualize_tsne_and_confusion_matrix(all_features, all_labels,all_preds, cm, self.args.save_dir,filename)
         

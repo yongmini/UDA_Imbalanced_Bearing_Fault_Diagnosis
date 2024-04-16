@@ -35,6 +35,7 @@ def data_transforms(normlize_type="-1-1"):
         'train': aug.Compose([
             aug.Reshape(),
             aug.Normalize(normlize_type),
+           # aug.RandomShuffleSegments(),
             aug.Retype()
 
         ]),
@@ -58,7 +59,7 @@ class dataset(object):
         self.train_data, self.train_labels = get_files(root=data_dir, dataset=dataset, faults=faults, signal_size=signal_size, condition=condition)
         self.transform = data_transforms(normlizetype)
 
-    def data_preprare(self, source_label=None, is_src=False, random_state=1, imbalance_ratio=None):
+    def data_preprare(self, source_label=None, random_state=1):
         
    
         data_pd = pd.DataFrame({"data": self.train_data, "labels": self.train_labels})

@@ -101,7 +101,7 @@ class InitTrain(object):
                 data_root = os.path.join(args.data_dir, src)
                 Dataset = importlib.import_module("data_loader.source_load").dataset
                 self.datasets[source] = Dataset(data_root, src, args.faults, args.signal_size, args.normlizetype, condition=condition
-                                                ).data_preprare(source_label=idx, is_src=True, random_state=args.random_state)
+                                                ).data_preprare(source_label=idx, random_state=args.random_state)
 
         for key in self.datasets.keys():
             logging.info('Source set {} number of samples {}.'.format(key, len(self.datasets[key])))
@@ -113,7 +113,8 @@ class InitTrain(object):
                 imbalance_ratio = {0:1, 1: 1, 2: 0.01, 3: 0.01, 4: 0.01, 5: 0.01, 6: 0.01, 7: 0.01, 8: 0.01, 9: 0.01}
                 wandb.log({"imba": imbalance_ratio})
             else:
-                imbalance_ratio = {0:1, 1: 0.01, 2: 0.01, 3: 0.01, 4: 0.01}
+                #imbalance_ratio = {0:1, 1: 0.01, 2: 0.01, 3: 0.01, 4: 0.01}
+                imbalance_ratio = {0:1, 1: 0.05, 2: 0.05, 3: 0.05, 4: 0.05}
                 wandb.log({"imba": imbalance_ratio})
 
         else:
@@ -125,9 +126,8 @@ class InitTrain(object):
             data_root = os.path.join(args.data_dir, tgt)
             Dataset = importlib.import_module("data_loader.target_load").dataset
             self.datasets['train'], self.datasets['val'] = Dataset(data_root, tgt, args.faults, args.signal_size, args.normlizetype, condition=condition
-                                                                ).data_preprare(source_label=idx+1, is_src=False, random_state=args.random_state, imbalance_ratio=imbalance_ratio)
+                                                                ).data_preprare(source_label=idx+1, random_state=args.random_state, imbalance_ratio=imbalance_ratio)
 
-       
     
         logging.info('target training set number of samples {}.'.format(len(self.datasets['train'])))
         wandb.log({"target training Set Size": len(self.datasets['train'])})
@@ -150,4 +150,6 @@ class InitTrain(object):
                                               num_workers=args.num_workers, drop_last=(False if x == 'val' else True),
                                               pin_memory=(True if self.device == 'cuda' else False))
                                               for x in dataset_keys}
+        
         self.iters = {x: iter(self.dataloaders[x]) for x in dataset_keys}
+        
