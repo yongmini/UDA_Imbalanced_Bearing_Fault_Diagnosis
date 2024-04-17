@@ -111,7 +111,9 @@ class Trainset(InitTrain):
                             
             # Print the train and val information via each epoch
             for key in epoch_loss.keys():
-                logging.info('Train-Loss {}: {:.4f}'.format(key, epoch_loss[key]/num_iter))
+                avg_acc = epoch_acc[key] / num_iter
+                logging.info('Train-Acc {}: {:.4f}'.format(key, avg_acc))
+                wandb.log({f'Train-Acc {key}': avg_acc}, commit=False)  # Log to wandb
             for key in epoch_acc.keys():
                 logging.info('Train-Acc {}: {:.4f}'.format(key, epoch_acc[key]/num_iter))
                 
@@ -129,7 +131,10 @@ class Trainset(InitTrain):
             
             best_acc_formatted = f"{best_acc:.3f}"
             wandb.log({"best_target_acc": float(best_acc_formatted)})
-    
+             
+            if self.lr_scheduler is not None:
+                self.lr_scheduler.step()
+             
             if self.args.tsne:
                 self.epoch = epoch
                 if epoch == 1 or epoch % 5 == 0:

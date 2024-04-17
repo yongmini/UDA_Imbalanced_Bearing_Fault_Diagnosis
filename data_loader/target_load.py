@@ -28,8 +28,8 @@ def get_files(root, dataset, faults, signal_size, condition=3):
             while end_train <= half:
                 train_data.append(signal[start_train:end_train])
                 train_labels.append(index)
-                start_train += signal_size # // 2  # 50% overlap
-                end_train += signal_size #// 2
+                start_train += signal_size  #// 2  # 50% overlap
+                end_train += signal_size# // 2
             
             # Testing data with no overlap
             start_test, end_test = half, half + signal_size
@@ -48,7 +48,7 @@ def data_transforms(normlize_type="-1-1"):
         'train': aug.Compose([
             aug.Reshape(),
             aug.Normalize(normlize_type),
-            aug.RandomShuffleSegments(),
+           # aug.RandomShuffleSegments(),
             aug.Retype()
 
         ]),

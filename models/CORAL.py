@@ -115,7 +115,9 @@ class Trainset(InitTrain):
                 
             # Print the train and val information via each epoch
             for key in epoch_loss.keys():
-                logging.info('Train-Loss {}: {:.4f}'.format(key, epoch_loss[key]/num_iter))
+                avg_acc = epoch_acc[key] / num_iter
+                logging.info('Train-Acc {}: {:.4f}'.format(key, avg_acc))
+                wandb.log({f'Train-Acc {key}': avg_acc}, commit=False)  # Log to wandb
             for key in epoch_acc.keys():
                 logging.info('Train-Acc {}: {:.4f}'.format(key, epoch_acc[key]/num_iter))
                             

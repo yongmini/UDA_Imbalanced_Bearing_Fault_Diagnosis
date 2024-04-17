@@ -114,7 +114,7 @@ class InitTrain(object):
                 wandb.log({"imba": self.imbalance_ratio})
             elif 'JNU' in args.target:
                 
-                self.imbalance_ratio = {0:1, 1: 0.01, 2: 0.01, 3: 0.01}
+                self.imbalance_ratio = {0:1, 1: 0.05, 2: 0.05, 3: 0.05}
                 wandb.log({"imba": self.imbalance_ratio})
             elif 'CWRU' in args.target:
                 self.imbalance_ratio = {0:1, 1: 0.2, 2: 0.2, 3: 0.2, 4: 0.2, 5: 0.2, 6: 0.2, 7: 0.2, 8: 0.2, 9: 0.2}
