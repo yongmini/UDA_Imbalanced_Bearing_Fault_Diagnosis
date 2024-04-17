@@ -109,16 +109,19 @@ class InitTrain(object):
             self.datasets[key].summary()
             
         if args.imba:
-            if 'SEU' in args.Domain:
-                imbalance_ratio = {0:1, 1: 1, 2: 0.01, 3: 0.01, 4: 0.01, 5: 0.01, 6: 0.01, 7: 0.01, 8: 0.01, 9: 0.01}
-                wandb.log({"imba": imbalance_ratio})
-            else:
-                #imbalance_ratio = {0:1, 1: 0.01, 2: 0.01, 3: 0.01, 4: 0.01}
-                imbalance_ratio = {0:1, 1: 0.05, 2: 0.05, 3: 0.05, 4: 0.05}
-                wandb.log({"imba": imbalance_ratio})
+            if 'SEU' in args.target:
+                self.imbalance_ratio = {0:1, 1: 1, 2: 0.01, 3: 0.01, 4: 0.01, 5: 0.01, 6: 0.01, 7: 0.01, 8: 0.01, 9: 0.01}
+                wandb.log({"imba": self.imbalance_ratio})
+            elif 'JNU' in args.target:
+                
+                self.imbalance_ratio = {0:1, 1: 0.01, 2: 0.01, 3: 0.01}
+                wandb.log({"imba": self.imbalance_ratio})
+            elif 'CWRU' in args.target:
+                self.imbalance_ratio = {0:1, 1: 0.2, 2: 0.2, 3: 0.2, 4: 0.2, 5: 0.2, 6: 0.2, 7: 0.2, 8: 0.2, 9: 0.2}
+                wandb.log({"imba": self.imbalance_ratio})
 
         else:
-            imbalance_ratio = None
+            self.imbalance_ratio = None
 
         if '_' in args.target:
             tgt, condition = args.target.split('_')[0], int(args.target.split('_')[1])
@@ -126,7 +129,7 @@ class InitTrain(object):
             data_root = os.path.join(args.data_dir, tgt)
             Dataset = importlib.import_module("data_loader.target_load").dataset
             self.datasets['train'], self.datasets['val'] = Dataset(data_root, tgt, args.faults, args.signal_size, args.normlizetype, condition=condition
-                                                                ).data_preprare(source_label=idx+1, random_state=args.random_state, imbalance_ratio=imbalance_ratio)
+                                                                ).data_preprare(source_label=idx+1, random_state=args.random_state, imbalance_ratio=self.imbalance_ratio)
 
     
         logging.info('target training set number of samples {}.'.format(len(self.datasets['train'])))

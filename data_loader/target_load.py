@@ -48,7 +48,7 @@ def data_transforms(normlize_type="-1-1"):
         'train': aug.Compose([
             aug.Reshape(),
             aug.Normalize(normlize_type),
-            #aug.RandomShuffleSegments(),
+            aug.RandomShuffleSegments(),
             aug.Retype()
 
         ]),

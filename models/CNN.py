@@ -93,7 +93,7 @@ class Trainset(InitTrain):
             new_acc = self.test()
         
             
-            last_acc_formatted = f"{new_acc:.2f}"
+            last_acc_formatted = f"{new_acc:.3f}"
             wandb.log({"last_target_acc": float(last_acc_formatted)})
             
             
@@ -102,7 +102,7 @@ class Trainset(InitTrain):
                 best_epoch = epoch
             logging.info("The best model epoch {}, val-acc {:.4f}".format(best_epoch, best_acc))
             
-            best_acc_formatted = f"{best_acc:.2f}"
+            best_acc_formatted = f"{best_acc:.3f}"
             wandb.log({"best_target_acc": float(best_acc_formatted)})
             
 
