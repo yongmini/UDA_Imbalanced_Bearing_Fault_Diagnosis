@@ -8,7 +8,7 @@ Please be aware that I have referred to two repositories, which are cited below.
 
 It is planned to be updated step by step.
 
-If you want to specify the imbalance ratio for the training data of the target dataset, add the imbalance_ratio parameter to the Dataset function in train_utils.py.
+If you want to specify the imbalance ratio for the training data of the target dataset, add the imbalance_ratio parameter to the Dataset function in `train_utils.py.`
 
 ### Domain Adaptation
 - **ACDANN** - Integrating expert knowledge with domain adaptation for unsupervised fault diagnosis. [Published in TIM 2021](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9612159) | [View Code](/models/ACDANN.py)
