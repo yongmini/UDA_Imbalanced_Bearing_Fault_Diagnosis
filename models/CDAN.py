@@ -118,7 +118,7 @@ class Trainset(InitTrain):
     
     def __init__(self, args):
         super(Trainset, self).__init__(args)
-        output_size = 2560
+        output_size = 512
         self.domain_discri = model_base.ClassifierMLP(input_size=output_size * args.num_classes, output_size=1,
                         dropout=args.dropout, last='sigmoid').to(self.device)
         grl = utils.GradientReverseLayer() 
@@ -188,6 +188,7 @@ class Trainset(InitTrain):
                 loss_d = self.domain_adv(y_s, f_s, y_t, f_t)
                 loss = loss_c + tradeoff[0] * loss_d
                 epoch_acc['Source Data']  += utils.get_accuracy(y_s, source_labels)
+ 
                 epoch_acc['Discriminator']  += self.domain_adv.domain_discriminator_accuracy
                 
                 epoch_loss['Source Classifier'] += loss_c
@@ -198,14 +199,14 @@ class Trainset(InitTrain):
                 self.optimizer.step()
                 
             # Print the train and val information via each epoch
-            for key in epoch_loss.keys():
+            for key in epoch_acc.keys():
                 avg_acc = epoch_acc[key] / num_iter
                 logging.info('Train-Acc {}: {:.4f}'.format(key, avg_acc))
                 wandb.log({f'Train-Acc {key}': avg_acc}, commit=False)  # Log to wandb
-            for key in epoch_acc.keys():
-                logging.info('Train-Acc {}: {:.4f}'.format(key, epoch_acc[key]/num_iter))
+            for key in epoch_loss.keys():
+                logging.info('Train-Loss {}: {:.4f}'.format(key, epoch_loss[key]/num_iter))
             
-            # log the best model according to the val accuracy
+       #   @  log the best model according to the val accuracy
             new_acc = self.test()
             
             last_acc_formatted = f"{new_acc:.2f}"
@@ -219,16 +220,22 @@ class Trainset(InitTrain):
             
             best_acc_formatted = f"{best_acc:.2f}"
             wandb.log({"best_target_acc": float(best_acc_formatted)})
-            
+    
             
             
             
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
-                
-        if self.args.tsne:
-            self.test_tsne()
-            self.test_tsne_all()
+                             
+            if self.args.tsne:
+                self.epoch = epoch
+                if epoch == 1 or epoch % 5 == 0:
+                    self.test_tsne()
+        acc=self.test()
+        acc_formatted = f"{acc:.3f}"
+        wandb.log({"correct_target_acc": float(acc_formatted)})   
+        
+     
             
     def test(self):
         self.model.eval()
@@ -239,7 +246,7 @@ class Trainset(InitTrain):
             for i in tqdm(range(num_iter), ascii=True):
                 target_data, target_labels, _ = next(iters)
                 target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
-                pred = self.model(target_data)
+                pred ,_= self.model(target_data)
                 acc += utils.get_accuracy(pred, target_labels)
         acc /= num_iter
         logging.info('Val-Acc Target Data: {:.4f}'.format(acc))
@@ -273,7 +280,7 @@ class Trainset(InitTrain):
         cm = confusion_matrix(all_labels, all_preds)
 
         # Perform t-SNE and save plot
-        filename = f'tsne_conmat_imba_{self.args.imba}.png'
+        filename = "tsne_conmat.png"
         visualize_tsne_and_confusion_matrix(all_features, all_labels, cm, self.args.save_dir,filename)
         
         

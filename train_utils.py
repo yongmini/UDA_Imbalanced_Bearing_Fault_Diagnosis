@@ -6,6 +6,37 @@ import importlib
 from torch import optim
 from torch.utils.data.dataset import ConcatDataset
 import wandb
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+import numpy as np
+import prior 
+from sklearn.preprocessing import StandardScaler
+from scipy import signal
+import pandas as pd
+def  STFT(fl):
+    f, t, Zxx = signal.stft(fl, nperseg=128)
+    img = np.abs(Zxx) / len(Zxx)
+
+    return img
+
+def prepare_data(dataloader):
+    features = []
+    labels = []
+    for batch in dataloader:
+  
+        if len(batch) == 2:  # 데이터와 레이블만 포함하는 경우
+            data, label = batch
+        elif len(batch) > 2:  # 추가 데이터가 포함된 경우
+            data, label = batch[0], batch[1] 
+        data = data.permute(0, 2, 1)
+        features.extend(data.numpy())
+        labels.extend(label.numpy())
+    x,y= np.array(features), np.array(labels)
+    print(x.shape, y.shape)
+    x =np.apply_along_axis(STFT, 1, np.squeeze(x))
+    x=np.mean(x, axis=2).reshape(x.shape[0],x.shape[1],1)
+    return x, y
+
 
 class InitTrain(object):
     
@@ -93,6 +124,7 @@ class InitTrain(object):
         self.datasets = {}
         idx = 0          
         for i, source in enumerate(args.source_name):
+       
             if args.train_mode == 'multi_source':
                 idx = i
             if '_' in source:
@@ -153,6 +185,27 @@ class InitTrain(object):
                                               num_workers=args.num_workers, drop_last=(False if x == 'val' else True),
                                               pin_memory=(True if self.device == 'cuda' else False))
                                               for x in dataset_keys}
+        
+        # 데이터 로드 (PyTorch dataloader 사용)
+        # train_features, train_labels = prepare_data(self.dataloaders[source])
+        # test_features, test_labels = prepare_data(self.dataloaders['train'])
+        
+        # train_features=np.squeeze(train_features)
+        # test_features=np.squeeze(test_features)
+        # train_features=pd.DataFrame(train_features)
+        # test_features=pd.DataFrame(test_features)
+        # scaler = StandardScaler()
+        # train_features = scaler.fit_transform(train_features)  # 트레이닝 데이터에 대해 fit과 transform 수행
+        # test_features = scaler.transform(test_features)  # 트레이닝 데이터로 학습된 스케일러를 사용하여 테스트 데이터 변환
+
+        # # 랜덤 포레스트 모델 초기화 및 학습
+        # rf = RandomForestClassifier(n_estimators=100, random_state=42)
+        # rf.fit(train_features, train_labels)
+
+        # # 검증 데이터에 대한 예측 및 성능 평가
+        # predictions = rf.predict(test_features)
+        # accuracy = accuracy_score(test_labels, predictions)
+        # print(f"Validation Accuracy: {accuracy}")
         
         self.iters = {x: iter(self.dataloaders[x]) for x in dataset_keys}
         

@@ -28,7 +28,7 @@ class Trainset(InitTrain):
     
     def __init__(self, args):
         super(Trainset, self).__init__(args)
-        output_size = 2560
+        output_size = 512
         self.model = model_base.BaseModel(input_size=1, num_classes=args.num_classes,
                                      dropout=args.dropout).to(self.device)
         self.domain_discri = model_base.ClassifierMLP(input_size=output_size, output_size=1,
@@ -110,14 +110,14 @@ class Trainset(InitTrain):
                 self.optimizer.step()
                             
             # Print the train and val information via each epoch
-            for key in epoch_loss.keys():
+            for key in epoch_acc.keys():
                 avg_acc = epoch_acc[key] / num_iter
                 logging.info('Train-Acc {}: {:.4f}'.format(key, avg_acc))
                 wandb.log({f'Train-Acc {key}': avg_acc}, commit=False)  # Log to wandb
-            for key in epoch_acc.keys():
-                logging.info('Train-Acc {}: {:.4f}'.format(key, epoch_acc[key]/num_iter))
+            for key in epoch_loss.keys():
+                logging.info('Train-Loss {}: {:.4f}'.format(key, epoch_loss[key]/num_iter))
                 
-            # log the best model according to the val accuracy
+            #log the best model according to the val accuracy
             new_acc = self.test()
             
             last_acc_formatted = f"{new_acc:.3f}"
@@ -141,7 +141,9 @@ class Trainset(InitTrain):
                     self.test_tsne()
                 
      
-        self.test()
+        acc=self.test()
+        acc_formatted = f"{acc:.3f}"
+        wandb.log({"target_acc": float(acc_formatted)})    
     
 
                 

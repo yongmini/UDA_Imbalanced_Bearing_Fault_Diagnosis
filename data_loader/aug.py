@@ -108,37 +108,40 @@ class RandomShuffleSegments(object):
         self.num_segments = num_segments
 
     def __call__(self, seq):
-        # Check if the number of segments is a divisor of the sequence length
+
         if seq.shape[1] % self.num_segments != 0:
             raise ValueError("Sequence length must be divisible by the number of segments.")
 
         segment_length = seq.shape[1] // self.num_segments
         segments = []
 
-        # Split the sequence into segments
         for i in range(self.num_segments):
             start_index = i * segment_length
             end_index = start_index + segment_length
             segments.append(seq[:, start_index:end_index])
 
-        # Shuffle the segments
         np.random.shuffle(segments)
 
-        # Concatenate the shuffled segments
         shuffled_seq = np.concatenate(segments, axis=1)
         return shuffled_seq
 
 
 class Normalize(object):
-    def __init__(self, norm_type = "0-1"):
-        assert norm_type in ["0-1","-1-1","mean-std"], f"Normalization should be '0-1','mean-std' or '-1-1', but got {norm_type}"
+    def __init__(self, norm_type="0-1"):
+        assert norm_type in ["0-1", "-1-1", "mean-std", "RMS", "None"], \
+            f"Normalization should be '0-1', '-1-1', 'mean-std', 'RMS', or 'None', but got {norm_type}"
         self.type = norm_type
         
     def __call__(self, seq):
-        if  self.type == "0-1":
-            seq = (seq-seq.min())/(seq.max()-seq.min())
-        elif  self.type == "-1-1":
-            seq = 2*(seq-seq.min())/(seq.max()-seq.min()) + -1
+        import numpy as np  # Ensure numpy is imported for mathematical operations
+        if self.type == "0-1":
+            seq = (seq - seq.min()) / (seq.max() - seq.min())
+        elif self.type == "-1-1":
+            seq = 2 * (seq - seq.min()) / (seq.max() - seq.min()) - 1
         elif self.type == "mean-std":
-            seq = (seq-seq.mean())/seq.std()
+            seq = (seq - seq.mean()) / seq.std()
+        elif self.type == "RMS":
+            seq = seq**2 / len(seq)
+        
         return seq
+

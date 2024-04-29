@@ -132,27 +132,26 @@ class Trainset(InitTrain):
                 self.optimizer.step()
             
             # Print the train and val information via each epoch
-            for key in epoch_loss.keys():
+            for key in epoch_acc.keys():
                 avg_acc = epoch_acc[key] / num_iter
                 logging.info('Train-Acc {}: {:.4f}'.format(key, avg_acc))
                 wandb.log({f'Train-Acc {key}': avg_acc}, commit=False)  # Log to wandb
-            for key in epoch_acc.keys():
-                logging.info('Train-Acc {}: {:.4f}'.format(key, epoch_acc[key]/num_iter))
-            
+            for key in epoch_loss.keys():
+                logging.info('Train-Loss {}: {:.4f}'.format(key, epoch_loss[key]/num_iter))
             # log the best model according to the val accuracy
-            new_acc = self.test()
+        #    new_acc = self.test()
+
+            # last_acc_formatted = f"{new_acc:.3f}"
+            # wandb.log({"last_target_acc": float(last_acc_formatted)})
             
-            last_acc_formatted = f"{new_acc:.3f}"
-            wandb.log({"last_target_acc": float(last_acc_formatted)})
             
+            # if new_acc >= best_acc:
+            #     best_acc = new_acc
+            #     best_epoch = epoch
+            # logging.info("The best model epoch {}, val-acc {:.4f}".format(best_epoch, best_acc))
             
-            if new_acc >= best_acc:
-                best_acc = new_acc
-                best_epoch = epoch
-            logging.info("The best model epoch {}, val-acc {:.4f}".format(best_epoch, best_acc))
-            
-            best_acc_formatted = f"{best_acc:.3f}"
-            wandb.log({"best_target_acc": float(best_acc_formatted)})
+            # best_acc_formatted = f"{best_acc:.3f}"
+            # wandb.log({"best_target_acc": float(best_acc_formatted)})
             
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
@@ -164,7 +163,9 @@ class Trainset(InitTrain):
         if self.args.tsne:
                 self.test_tsne()
               #  self.test_tsne_all()
-            
+        acc=self.test()
+        acc_formatted = f"{acc:.3f}"
+        wandb.log({"correct_target_acc": float(acc_formatted)})        
     def test(self):
         self.model.eval()
         acc = 0.0

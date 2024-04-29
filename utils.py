@@ -275,38 +275,7 @@ class DomainAdversarialLoss(nn.Module):
 #     plt.savefig(save_path)
 #     plt.close() 
 
-# def visualize_tsne_and_confusion_matrix(features, all_labels, cm, save_dir,file_name):
-#     # Perform t-SNE
-#     tsne = TSNE(n_components=2, random_state=42)
-#     transformed_features = tsne.fit_transform(features)
-
-#     # Create a figure with two subplots
-#     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 8))
-
-#     # Visualize t-SNE
-#     for label in np.unique(all_labels):
-#         ax1.scatter(transformed_features[all_labels == label, 0], transformed_features[all_labels == label, 1], label=label)
-#     ax1.set_title('t-SNE Visualization')
-#     ax1.set_xlabel('t-SNE Component 1')
-#     ax1.set_ylabel('t-SNE Component 2')
-#     ax1.legend()
-
-#     # Visualize confusion matrix
-#     sns.heatmap(cm, annot=True, cmap='Blues', fmt='d', xticklabels=list(range(len(np.unique(all_labels)))), yticklabels=list(range(len(np.unique(all_labels)))), ax=ax2)
-#     ax2.set_title('Confusion Matrix')
-#     ax2.set_xlabel('Predicted Labels')
-#     ax2.set_ylabel('True Labels')
-
-#     # Save the combined plot
-#     save_path = os.path.join(save_dir,file_name)
-#     plt.tight_layout()
-#     plt.savefig(save_path)
-#     plt.close()
-
-#     return save_path
-
-
-def visualize_tsne_and_confusion_matrix(features, all_labels, all_preds, cm, save_dir, file_name):
+def visualize_tsne_and_confusion_matrix(features, all_labels, cm, save_dir,file_name):
     # Perform t-SNE
     tsne = TSNE(n_components=2, random_state=42)
     transformed_features = tsne.fit_transform(features)
@@ -314,45 +283,68 @@ def visualize_tsne_and_confusion_matrix(features, all_labels, all_preds, cm, sav
     # Create a figure with two subplots
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 8))
 
-    # Define specific colors for each class
-    class_colors = {0: 'blue', 1: 'green', 2: 'orange', 3: 'red'}
-    edge_colors = [class_colors[pred] for pred in all_preds]  # Colors for misclassified edges
-
-    # Class names mapped to their respective labels
-    class_names = {0: 'Normal', 1: 'Ball', 2: 'Inner', 3: 'Outer'}
-
     # Visualize t-SNE
     for label in np.unique(all_labels):
-        idx_color = class_colors[label]
-        # Points of the current class
-        class_mask = all_labels == label
-        ax1.scatter(transformed_features[class_mask, 0], transformed_features[class_mask, 1],
-                    label=f'{class_names[label]}', color=idx_color, s=40)
-
-        # Highlight misclassified points with predicted class color edges
-        misclass_mask = class_mask & (all_labels != all_preds)
-        ax1.scatter(transformed_features[misclass_mask, 0], transformed_features[misclass_mask, 1],
-                    facecolors='none', edgecolors=[class_colors[pred] for pred in all_preds[misclass_mask]],
-                    linewidths=1, s=45, marker='o')
-
+        ax1.scatter(transformed_features[all_labels == label, 0], transformed_features[all_labels == label, 1], label=label)
     ax1.set_title('t-SNE Visualization')
     ax1.set_xlabel('t-SNE Component 1')
     ax1.set_ylabel('t-SNE Component 2')
     ax1.legend()
 
     # Visualize confusion matrix
-    sns.heatmap(cm, annot=True, cmap='Blues', fmt='d', ax=ax2,
-                xticklabels=[class_names[i] for i in range(4)], yticklabels=[class_names[i] for i in range(4)])
+    sns.heatmap(cm, annot=True, cmap='Blues', fmt='d', xticklabels=list(range(len(np.unique(all_labels)))), yticklabels=list(range(len(np.unique(all_labels)))), ax=ax2)
     ax2.set_title('Confusion Matrix')
     ax2.set_xlabel('Predicted Labels')
     ax2.set_ylabel('True Labels')
 
     # Save the combined plot
-    save_path = os.path.join(save_dir, file_name)
+    save_path = os.path.join(save_dir,file_name)
     plt.tight_layout()
     plt.savefig(save_path)
     plt.close()
 
-    return save_path
 
-    return save_path
+
+# def visualize_tsne_and_confusion_matrix(features, all_labels, cm, save_dir, file_name):
+#     # Perform t-SNE
+#     tsne = TSNE(n_components=2, random_state=42)
+#     transformed_features = tsne.fit_transform(features)
+
+#     # Create a figure with two subplots
+#     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 8))
+
+#     # Define specific colors for each class
+#     class_colors = {0: 'blue', 1: 'green', 2: 'orange', 3: 'red'}
+
+#     # Class names mapped to their respective labels
+#     class_names = {0: 'Normal', 1: 'Ball', 2: 'Inner', 3: 'Outer'}
+
+#     # Visualize t-SNE
+#     for label in np.unique(all_labels):
+#         idx_color = class_colors[label]
+#         # Points of the current class
+#         class_mask = all_labels == label
+#         ax1.scatter(transformed_features[class_mask, 0], transformed_features[class_mask, 1],
+#                     label=f'{class_names[label]}', color=idx_color, s=40)
+
+
+
+#     ax1.set_title('t-SNE Visualization')
+#     ax1.set_xlabel('t-SNE Component 1')
+#     ax1.set_ylabel('t-SNE Component 2')
+#     ax1.legend()
+
+#     # Visualize confusion matrix
+#     sns.heatmap(cm, annot=True, cmap='Blues', fmt='d', ax=ax2,
+#                 xticklabels=[class_names[i] for i in range(4)], yticklabels=[class_names[i] for i in range(4)])
+#     ax2.set_title('Confusion Matrix')
+#     ax2.set_xlabel('Predicted Labels')
+#     ax2.set_ylabel('True Labels')
+
+#     # Save the combined plot
+#     save_path = os.path.join(save_dir, file_name)
+#     plt.tight_layout()
+#     plt.savefig(save_path)
+#     plt.close()
+
+ 

@@ -81,15 +81,15 @@ class Trainset(InitTrain):
                 self.optimizer.step()
                 
             # Print the train and val information via each epoch
+            for key in epoch_acc.keys():
+                avg_acc = epoch_acc[key] / num_iter
+                logging.info('Train-Acc {}: {:.4f}'.format(key, avg_acc))
+                wandb.log({f'Train-Acc {key}': avg_acc}, commit=False)  # Log to wandb
             for key in epoch_loss.keys():
                 logging.info('Train-Loss {}: {:.4f}'.format(key, epoch_loss[key]/num_iter))
-            for key in epoch_acc.keys():
-                logging.info('Train-Acc {}: {:.4f}'.format(key, epoch_acc[key]/num_iter))
                     
     
-            
-            
-            # log the best model according to the val accuracy
+        
             new_acc = self.test()
         
             
@@ -112,7 +112,9 @@ class Trainset(InitTrain):
             # self.epoch = epoch
             # if epoch == 1 or epoch % 50 == 0:
             #     self.test_tsne()
-                
+        acc=self.test()
+        acc_formatted = f"{acc:.3f}"
+        wandb.log({"target_acc": float(acc_formatted)})            
         # if self.args.tsne:
         #         self.test_tsne()
         #       #  self.test_tsne_all()

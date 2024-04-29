@@ -35,7 +35,6 @@ def data_transforms(normlize_type="-1-1"):
         'train': aug.Compose([
             aug.Reshape(),
             aug.Normalize(normlize_type),
-           # aug.RandomShuffleSegments(),
             aug.Retype()
 
         ]),
@@ -51,7 +50,7 @@ def data_transforms(normlize_type="-1-1"):
 class dataset(object):
     
     def __init__(self, data_dir, dataset, faults, signal_size, normlizetype, condition=2,
-                 balance_data=True, test_size=0.2):
+                 balance_data=False, test_size=0.2):
 
         self.balance_data = balance_data
         self.test_size = test_size
@@ -63,7 +62,7 @@ class dataset(object):
         
    
         data_pd = pd.DataFrame({"data": self.train_data, "labels": self.train_labels})
-        data_pd = data_utils.balance_data(data_pd,random_state=random_state) if self.balance_data else data_pd
+        data_pd = data_utils.balance_data(data_pd,random_state=42) if self.balance_data else data_pd
         
 
         train_dataset = data_utils.dataset(list_data=data_pd, source_label=source_label, transform=self.transform['train'])

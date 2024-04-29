@@ -22,6 +22,12 @@ def JNU(item_path):
     
     return signal
 
+def HUST(item_path):
+    if 'sim' in item_path:
+        signal = loadmat(item_path)['X_sim_with_noise']
+    else:
+        signal = loadmat(item_path)['data']
+    return signal
 
 def SEU(item_path):
     f = open(item_path, "r", encoding='gb18030', errors='ignore')
