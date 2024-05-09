@@ -1,11 +1,12 @@
 '''
-Paper: Ganin, Y. and Lempitsky, V., 2015, June. Unsupervised domain adaptation by backpropagation.
-    In International conference on machine learning (pp. 1180-1189). PMLR.
-Reference code: https://github.com/thuml/Transfer-Learning-Library
+Paper: Wang, Q., Taal, C. and Fink, O., 2021. Integrating expert knowledge with domain adaptation 
+    for unsupervised fault diagnosis. IEEE Transactions on Instrumentation and Measurement, 71, pp.1-12.
+Reference code: https://github.com/qinenergy/syn2real
+Note: Augmented Conditional Domain Alignment Neural Network (ACDANN) was not an official name in the paper.
 '''
-import torch.nn as nn
 import torch
 import logging
+import numpy as np
 from tqdm import tqdm
 import torch.nn.functional as F
 from collections import defaultdict
@@ -16,68 +17,23 @@ from train_utils import InitTrain
 from utils import visualize_tsne_and_confusion_matrix
 import numpy as np     
 from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
 import os
-from collections import Counter
-from torch.utils.data import DataLoader, WeightedRandomSampler, Subset
-from torch.utils.data import Dataset, DataLoader
-import torchvision.transforms as transforms
-import aug
-import data_utils
-    
- 
 
-def cost_sensitive_loss(input, target, M):
-    if input.size(0) != target.size(0):
-        raise ValueError('Expected input batch_size ({}) to match target batch_size ({}).'
-                         .format(input.size(0), target.size(0)))
-    device = input.device
-    M = M.to(device)
-    return (M[target, :]*input.float()).sum(axis=-1)
-    # return torch.diag(torch.matmul(input, M[:, target]))
-
-class CostSensitiveLoss(nn.Module):
-    def __init__(self,  n_classes, exp=1, normalization='softmax', reduction='mean'):
-        super(CostSensitiveLoss, self).__init__()
-        if normalization == 'softmax':
-            self.normalization = nn.Softmax(dim=1)
-        elif normalization == 'sigmoid':
-            self.normalization = nn.Sigmoid()
-        else:
-            self.normalization = None
-        self.reduction = reduction
-        x = np.abs(np.arange(n_classes, dtype=np.float32))
-        M = np.abs((x[:, np.newaxis] - x[np.newaxis, :])) ** exp
-        M /= M.max()
-        self.M = torch.from_numpy(M)
-
-    def forward(self, logits, target):
-        preds = self.normalization(logits)
-        loss = cost_sensitive_loss(preds, target, self.M)
-        if self.reduction == 'none':
-            return loss
-        elif self.reduction == 'mean':
-            return loss.mean()
-        elif self.reduction == 'sum':
-            return loss.sum()
-        else:
-            raise ValueError('`reduction` must be one of \'none\', \'mean\', or \'sum\'.')
-
-   
 class Trainset(InitTrain):
     
     def __init__(self, args):
         super(Trainset, self).__init__(args)
-        output_size = 512
-        self.model = model_base.BaseModel(input_size=1, num_classes=args.num_classes,
-                                     dropout=args.dropout).to(self.device)
-        self.domain_discri = model_base.ClassifierMLP(input_size=output_size, output_size=1,
-                        dropout=args.dropout, last='sigmoid').to(self.device)
-        grl = utils.GradientReverseLayer() 
-        self.domain_adv = utils.DomainAdversarialLoss(self.domain_discri, grl=grl)
-                  
+        feature_size = 2560
+        self.model = model_base.BaseModel_add_freq(input_size=1, num_classes=args.num_classes,feature_size=feature_size,
+                                      dropout=args.dropout).to(self.device)
+        self.grl = utils.GradientReverseLayer()
+        self.dist_beta = torch.distributions.beta.Beta(1., 1.)
+        self.model = model_base.BaseModel_add_freq(input_size=1, num_classes=args.num_classes,
+                                          dropout=args.dropout).to(self.device)
         self._init_data()
-        
-  
+    
     def save_model(self):
         torch.save({
             'model': self.model.state_dict()
@@ -91,15 +47,15 @@ class Trainset(InitTrain):
         
     def train(self):
         args = self.args
-        criterion = CostSensitiveLoss(4)
+        
         if args.train_mode == 'single_source':
             src = args.source_name[0]
         elif args.train_mode == 'source_combine':
             src = args.source_name
         elif args.train_mode == 'multi_source':
             raise Exception("This model cannot be trained in multi_source mode.")
-
-        self.optimizer = self._get_optimizer([self.model, self.domain_discri])
+        
+        self.optimizer = self._get_optimizer([self.model, self.discriminator])
         self.lr_scheduler = self._get_lr_scheduler(self.optimizer)
         
         best_acc = 0.0
@@ -117,7 +73,7 @@ class Trainset(InitTrain):
    
             # Set model to train mode or evaluate mode
             self.model.train()
-            self.domain_discri.train()
+            self.discriminator.train()
             epoch_loss = defaultdict(float)
             tradeoff = self._get_tradeoff(args.tradeoff, epoch) 
             
@@ -128,27 +84,53 @@ class Trainset(InitTrain):
                 source_data, source_labels = utils.get_next_batch(self.dataloaders,
             						     self.iters, src, self.device)
                 # forward
+                batch_size = source_data.shape[0]
                 self.optimizer.zero_grad()
                 data = torch.cat((source_data, target_data), dim=0)
                 
                 y, f = self.model(data)
                 f_s, f_t = f.chunk(2, dim=0)
-                y_s, _ = y.chunk(2, dim=0)
-        
+                y_s, y_t = y.chunk(2, dim=0)
+                
                 loss_c = F.cross_entropy(y_s, source_labels)
-               # loss_c = criterion(y_s, source_labels)
-                loss_d, acc_d = self.domain_adv(f_s, f_t)
-                loss = loss_c + tradeoff[0] * loss_d
+                
+                softmax_output_src = F.softmax(y_s, dim=-1)
+                softmax_output_tgt = F.softmax(y_t, dim=-1)
+               
+                lmb = self.dist_beta.sample((batch_size, 1)).to(self.device)
+                labels_dm = torch.concat((torch.ones(batch_size, dtype=torch.long),
+                      torch.zeros(batch_size, dtype=torch.long)), dim=0).to(self.device)
+        
+                idxx = np.arange(batch_size)
+                np.random.shuffle(idxx)
+                f_s = lmb * f_s + (1.-lmb) * f_s[idxx]
+                f_t = lmb * f_t + (1.-lmb) * f_t[idxx]
+    
+                softmax_output_src = lmb * softmax_output_src + (1.-lmb) * softmax_output_src[idxx]
+                softmax_output_tgt = lmb * softmax_output_tgt + (1.-lmb) * softmax_output_tgt[idxx]
+                                             
+                feat_src_ = torch.bmm(softmax_output_src.unsqueeze(2),
+                                     f_s.unsqueeze(1)).view(batch_size, -1)
+                feat_tgt_ = torch.bmm(softmax_output_tgt.unsqueeze(2),
+                                     f_t.unsqueeze(1)).view(batch_size, -1)
+    
+                feat = self.grl(torch.concat((feat_src_, feat_tgt_), dim=0))
+                logits_dm = self.discriminator(feat)
+                loss_dm = F.cross_entropy(logits_dm, labels_dm)
+                loss = loss_c + tradeoff[0] * loss_dm
+
+          
+                
                 epoch_acc['Source Data']  += utils.get_accuracy(y_s, source_labels)
-                epoch_acc['Discriminator']  += acc_d
+                epoch_acc['Discriminator']  += utils.get_accuracy(logits_dm, labels_dm)
                 
                 epoch_loss['Source Classifier'] += loss_c
-                epoch_loss['Discriminator'] += loss_d
+                epoch_loss['Discriminator'] += loss_dm
 
                 # backward
                 loss.backward()
                 self.optimizer.step()
-                            
+            
             # Print the train and val information via each epoch
             for key in epoch_acc.keys():
                 avg_acc = epoch_acc[key] / num_iter
@@ -156,10 +138,9 @@ class Trainset(InitTrain):
                 wandb.log({f'Train-Acc {key}': avg_acc}, commit=False)  # Log to wandb
             for key in epoch_loss.keys():
                 logging.info('Train-Loss {}: {:.4f}'.format(key, epoch_loss[key]/num_iter))
-                
-            #log the best model according to the val accuracy
+            # log the best model according to the val accuracy
             new_acc = self.test()
-            
+
             last_acc_formatted = f"{new_acc:.3f}"
             wandb.log({"last_target_acc": float(last_acc_formatted)})
             
@@ -171,28 +152,23 @@ class Trainset(InitTrain):
             
             best_acc_formatted = f"{best_acc:.3f}"
             wandb.log({"best_target_acc": float(best_acc_formatted)})
-             
+            
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
-             
-            if self.args.tsne:
-                self.epoch = epoch
-                if epoch == 1 or epoch % 5 == 0:
-                    self.test_tsne()
+    
+            # self.epoch = epoch
+            # if epoch == 1 or epoch % 5 == 0:
+            #     self.test_tsne()
                 
-     
+        if self.args.tsne:
+                self.test_tsne()
+              #  self.test_tsne_all()
         acc=self.test()
         acc_formatted = f"{acc:.3f}"
-        wandb.log({"target_acc": float(acc_formatted)})    
-    
-
-                
-        
+        wandb.log({"correct_target_acc": float(acc_formatted)})        
     def test(self):
         self.model.eval()
         acc = 0.0
-        
-        
         iters = iter(self.dataloaders['val'])
         num_iter = len(iters)
         with torch.no_grad():
@@ -201,12 +177,10 @@ class Trainset(InitTrain):
                 target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
                 pred = self.model(target_data)
                 acc += utils.get_accuracy(pred, target_labels)
-
         acc /= num_iter
         logging.info('Val-Acc Target Data: {:.4f}'.format(acc))
         return acc
-
-
+    
     
     def test_tsne(self):
         self.model.eval()
@@ -228,28 +202,16 @@ class Trainset(InitTrain):
         all_features = []
         all_labels = []
         all_preds = [] 
-        all_classifications = []
         with torch.no_grad():
             for i in tqdm(range(num_iter), ascii=True):
                 target_data, target_labels, _ = next(iters)
                 target_data, target_labels = target_data.to(self.device), target_labels.to(self.device)
                 pred, features = self.model(target_data)
-                probabilities = F.softmax(pred, dim=1)
+                
                 pred=pred.argmax(dim=1)
                 all_features.append(features.cpu().numpy())
                 all_labels.append(target_labels.cpu().numpy())
                 all_preds.append(pred.cpu().numpy())
-
-                # Process each sample
-                for label, prediction, confidence in zip(target_labels, pred, probabilities):
-                    if label != prediction:
-                        # Misclassified
-                        all_classifications.append(['Incorrect', label.item(), prediction.item()] + confidence.tolist())
-                    else:
-                        # Correctly classified
-                        all_classifications.append(['Correct', label.item(), prediction.item()] + confidence.tolist())
-
-
 
         # Concatenate features and labels
         all_features = np.concatenate(all_features, axis=0)
@@ -257,12 +219,11 @@ class Trainset(InitTrain):
         all_preds = np.concatenate(all_preds, axis=0)
         
         cm = confusion_matrix(all_labels, all_preds)
-        classification_filename = f"classifications_{self.args.imba}_{self.args.model_name}_{self.epoch}.txt"
-        header = "Classification_Status TrueLabel PredictedLabel " + " ".join(f"Conf_Class{i}" for i in range(probabilities.shape[1]))
-        np.savetxt(os.path.join(self.args.save_dir, classification_filename), np.array(all_classifications), fmt='%s', header=header)
 
         # Perform t-SNE and save plot
-        filename = f"tsne_conmat_imba_unlabel_{str(self.args.imba)}_{self.args.model_name}_{self.epoch}.png"
-
+        filename = f"tsne_conmat_imba_{str(self.args.imba)}_{self.args.model_name}_{self.epoch}.png"
         visualize_tsne_and_confusion_matrix(all_features, all_labels,all_preds, cm, self.args.save_dir,filename)
         
+        
+
+            

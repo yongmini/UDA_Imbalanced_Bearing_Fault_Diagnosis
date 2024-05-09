@@ -3,7 +3,10 @@ Paper: Ganin, Y. and Lempitsky, V., 2015, June. Unsupervised domain adaptation b
     In International conference on machine learning (pp. 1180-1189). PMLR.
 Reference code: https://github.com/thuml/Transfer-Learning-Library
 '''
-import torch.nn as nn
+'''
+Paper: Qian, Q., Qin, Y., Luo, J., Wang, Y., & Wu, F. (2023). Deep discriminative transfer learning network for cross-machine fault diagnosis. Mechanical Systems and Signal Processing, 186, 109884.
+Reference code: https://github.com/liguge/Deep-discriminative-transfer-learning-network-for-cross-machine-fault-diagnosis/blob/main/DDTLN.py
+'''
 import torch
 import logging
 from tqdm import tqdm
@@ -23,54 +26,78 @@ from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as transforms
 import aug
 import data_utils
+import torch.nn as nn
+
+class I_Softmax(nn.Module):
+    def __init__(self, m, n, source_output1, source_label, device):
+        super().__init__()
+        self.device = device
+        self.m = torch.tensor([m]).to(self.device)
+        self.n = torch.tensor([n]).to(self.device)
+        self.source_output1 = source_output1
+        self.source_label = source_label
+        self.class_data = {}
+        self.class_labels = {}
+        self.data_set = []
+        self.label_set = []
+
+    def _combine(self):
+        for i in range(self.source_label.size()[0]):
+            label = self.source_label[i].item()
+            if label not in self.class_data:
+                self.class_data[label] = []
+                self.class_labels[label] = []
+            self.class_data[label].append(self.source_output1[i])
+            self.class_labels[label].append(label)
+
+        for label, data in self.class_data.items():
+            class_data_tensor = torch.stack(data)
+            class_label_tensor = torch.tensor(self.class_labels[label]).unsqueeze(1)
+
+            self.data_set.append(self._class_angle(class_data_tensor, class_label_tensor))
+            self.label_set.append(class_label_tensor)
+
+        data = torch.vstack(self.data_set)
+        label = torch.vstack(self.label_set)
+        return data.to(self.device), label.squeeze().to(self.device)
     
- 
 
-def cost_sensitive_loss(input, target, M):
-    if input.size(0) != target.size(0):
-        raise ValueError('Expected input batch_size ({}) to match target batch_size ({}).'
-                         .format(input.size(0), target.size(0)))
-    device = input.device
-    M = M.to(device)
-    return (M[target, :]*input.float()).sum(axis=-1)
-    # return torch.diag(torch.matmul(input, M[:, target]))
+    def _class_angle(self, a, la):
 
-class CostSensitiveLoss(nn.Module):
-    def __init__(self,  n_classes, exp=1, normalization='softmax', reduction='mean'):
-        super(CostSensitiveLoss, self).__init__()
-        if normalization == 'softmax':
-            self.normalization = nn.Softmax(dim=1)
-        elif normalization == 'sigmoid':
-            self.normalization = nn.Sigmoid()
+        if len(la) == 0:
+            return a
         else:
-            self.normalization = None
-        self.reduction = reduction
-        x = np.abs(np.arange(n_classes, dtype=np.float32))
-        M = np.abs((x[:, np.newaxis] - x[np.newaxis, :])) ** exp
-        M /= M.max()
-        self.M = torch.from_numpy(M)
+            index = la[0]
+        for i in range(len(a)):
+            c = a[i]
+            part1 = c[:index]
+            part2 = c[index + 1:]
+            if c[index] > 0:
+                val = c[index] / (self.m + 1e-5) - self.n
+            elif c[index] <= 0:
+                val = c[index] * (self.m + 1e-5) - self.n
+            if i == 0:
+                new_tensor = torch.concat((part1, val, part2))
+            else:
+                tensor = torch.concat((part1, val, part2), dim=0)
+                new_tensor = torch.vstack([new_tensor, tensor])
 
-    def forward(self, logits, target):
-        preds = self.normalization(logits)
-        loss = cost_sensitive_loss(preds, target, self.M)
-        if self.reduction == 'none':
-            return loss
-        elif self.reduction == 'mean':
-            return loss.mean()
-        elif self.reduction == 'sum':
-            return loss.sum()
-        else:
-            raise ValueError('`reduction` must be one of \'none\', \'mean\', or \'sum\'.')
+        return new_tensor
 
-   
+    def forward(self):
+        data, label = self._combine()
+        loss = F.nll_loss(F.log_softmax(data, dim=-1), label)
+        return data, label, loss
+    
+    
 class Trainset(InitTrain):
     
     def __init__(self, args):
         super(Trainset, self).__init__(args)
-        output_size = 512
-        self.model = model_base.BaseModel(input_size=1, num_classes=args.num_classes,
-                                     dropout=args.dropout).to(self.device)
-        self.domain_discri = model_base.ClassifierMLP(input_size=output_size, output_size=1,
+        feature_size = 2560
+        self.model = model_base.BaseModel_add_freq(input_size=1, num_classes=args.num_classes,feature_size=feature_size,
+                                      dropout=args.dropout).to(self.device)
+        self.domain_discri = model_base.ClassifierMLP(input_size=feature_size, output_size=1,
                         dropout=args.dropout, last='sigmoid').to(self.device)
         grl = utils.GradientReverseLayer() 
         self.domain_adv = utils.DomainAdversarialLoss(self.domain_discri, grl=grl)
@@ -91,7 +118,7 @@ class Trainset(InitTrain):
         
     def train(self):
         args = self.args
-        criterion = CostSensitiveLoss(4)
+        
         if args.train_mode == 'single_source':
             src = args.source_name[0]
         elif args.train_mode == 'source_combine':
@@ -134,9 +161,11 @@ class Trainset(InitTrain):
                 y, f = self.model(data)
                 f_s, f_t = f.chunk(2, dim=0)
                 y_s, _ = y.chunk(2, dim=0)
-        
-                loss_c = F.cross_entropy(y_s, source_labels)
-               # loss_c = criterion(y_s, source_labels)
+     
+                _, _, clc_loss_step = I_Softmax(2, 16, y_s, source_labels,self.device).forward()
+             
+                loss_c = clc_loss_step
+                
                 loss_d, acc_d = self.domain_adv(f_s, f_t)
                 loss = loss_c + tradeoff[0] * loss_d
                 epoch_acc['Source Data']  += utils.get_accuracy(y_s, source_labels)

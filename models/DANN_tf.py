@@ -67,10 +67,10 @@ class Trainset(InitTrain):
     
     def __init__(self, args):
         super(Trainset, self).__init__(args)
-        output_size = 512
-        self.model = model_base.BaseModel(input_size=1, num_classes=args.num_classes,
-                                     dropout=args.dropout).to(self.device)
-        self.domain_discri = model_base.ClassifierMLP(input_size=output_size, output_size=1,
+        feature_size = 2560
+        self.model = model_base.BaseModel_add_freq(input_size=1, num_classes=args.num_classes,feature_size=feature_size,
+                                      dropout=args.dropout).to(self.device)
+        self.domain_discri = model_base.ClassifierMLP(input_size=feature_size, output_size=1,
                         dropout=args.dropout, last='sigmoid').to(self.device)
         grl = utils.GradientReverseLayer() 
         self.domain_adv = utils.DomainAdversarialLoss(self.domain_discri, grl=grl)

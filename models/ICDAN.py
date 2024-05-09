@@ -14,7 +14,7 @@ import wandb
 import utils
 import model_base
 from train_utils import InitTrain
-from utils import visualize_tsne_and_confusion_matrix
+from utils import visualize_tsne_and_confusion_matrix, I_Softmax
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
@@ -184,7 +184,12 @@ class Trainset(InitTrain):
                 f_s, f_t = f.chunk(2, dim=0)
                 y_s, y_t = y.chunk(2, dim=0)
         
-                loss_c = F.cross_entropy(y_s, source_labels)
+        
+                _, _, clc_loss_step = I_Softmax(2, 16, y_s, source_labels,self.device).forward()
+             
+                loss_c = clc_loss_step
+                
+        
                 loss_d = self.domain_adv(y_s, f_s, y_t, f_t)
                 loss = loss_c + tradeoff[0] * loss_d
                 epoch_acc['Source Data']  += utils.get_accuracy(y_s, source_labels)

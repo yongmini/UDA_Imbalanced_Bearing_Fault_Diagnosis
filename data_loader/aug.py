@@ -128,8 +128,8 @@ class RandomShuffleSegments(object):
 
 class Normalize(object):
     def __init__(self, norm_type="0-1"):
-        assert norm_type in ["0-1", "-1-1", "mean-std", "RMS", "None"], \
-            f"Normalization should be '0-1', '-1-1', 'mean-std', 'RMS', or 'None', but got {norm_type}"
+        assert norm_type in ["0-1", "-1-1", "mean-std", "None"], \
+            f"Normalization should be '0-1', '-1-1', 'mean-std', or 'None', but got {norm_type}"
         self.type = norm_type
         
     def __call__(self, seq):
@@ -140,8 +140,9 @@ class Normalize(object):
             seq = 2 * (seq - seq.min()) / (seq.max() - seq.min()) - 1
         elif self.type == "mean-std":
             seq = (seq - seq.mean()) / seq.std()
-        elif self.type == "RMS":
-            seq = seq**2 / len(seq)
+        elif self.type == "None":
+            pass
+        
         
         return seq
 

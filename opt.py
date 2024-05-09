@@ -5,13 +5,13 @@ def parse_args():
  
 
     # basic parameters
-    parser.add_argument('--imba', type=bool, default=None, help='Save logs and trained model checkpoints')# str
-    parser.add_argument('--model_name', type=str, default='DANN',
+    parser.add_argument('--imba', type=bool, default=False, help='Save logs and trained model checkpoints')# str
+    parser.add_argument('--model_name', type=str, default='CNN',
                         help='Name of the model (in ./models directory)')
-    parser.add_argument('--Domain', type=str, default='simulation_hust')
-    parser.add_argument('--source', type=str, default='JNU_0',
+    parser.add_argument('--Domain', type=str, default='exp')
+    parser.add_argument('--source', type=str, default='CWRU_0',
                         help='Source data, separated by "," (select specific conditions of the dataset with name_number, such as CWRU_0)')
-    parser.add_argument('--target', type=str, default='JNU_1',
+    parser.add_argument('--target', type=str, default='CWRU_1',
                         help='Target data (select specific conditions of the dataset with name_number, such as CWRU_0)')
     parser.add_argument('--data_dir', type=str, default="/home/workspace/UDA_Bearing_Fault_Diagnosis/datasets",
                         help='Directory of the datasets')
@@ -22,7 +22,7 @@ def parse_args():
                         help='Allocate the device to use only one GPU ('' means using cpu)')
     parser.add_argument('--save_dir', type=str, default='./ckpt',
                         help='Directory to save logs and model checkpoints')
-    parser.add_argument('--max_epoch', type=int, default=200,
+    parser.add_argument('--max_epoch', type=int, default=50,
                         help='Number of epochs')
     parser.add_argument('--batch_size', type=int, default=32,
                         help='Batch size')
@@ -34,18 +34,18 @@ def parse_args():
                         help='Random state for the entire training')
 
     # optimization information
-    parser.add_argument('--normlizetype', type=str, choices=['0-1', '-1-1', 'mean-std','RMS','None'], default='mean-std',
+    parser.add_argument('--normlizetype', type=str, choices=['0-1', '-1-1', 'mean-std','None'], default='mean-std',
                         help='Data normalization methods')
     parser.add_argument('--opt', type=str, choices=['sgd', 'adam'], default='adam', help='Optimizer')
     parser.add_argument('--lr', type=float, default=1e-3, help='Initial learning rate')
     parser.add_argument('--momentum', type=float, default=0.9, help='Momentum for sgd')
     parser.add_argument('--betas', type=tuple, default=(0.9, 0.999), help='Betas for adam')
-    parser.add_argument('--weight_decay', type=float, default=5e-4, help='Weight decay for both sgd and adam')
+    parser.add_argument('--weight_decay', type=float, default=1e-3, help='Weight decay for both sgd and adam')
     parser.add_argument('--lr_scheduler', type=str, choices=['step', 'exp', 'stepLR', 'fix'], default='stepLR',
                         help='Type of learning rate schedule')
     parser.add_argument('--gamma', type=float, default=0.2,
                         help='Parameter for the learning rate scheduler (except "fix")')
-    parser.add_argument('--steps', type=str, default='50',
+    parser.add_argument('--steps', type=str, default='20',
                         help='Step of learning rate decay for "step" and "stepLR"')
     parser.add_argument('--tradeoff', type=list, default=['exp', 'exp', 'exp'],
                         help='Trade-off coefficients for the sum of losses, integer or "exp" ("exp" represents an increase from 0 to 1)')

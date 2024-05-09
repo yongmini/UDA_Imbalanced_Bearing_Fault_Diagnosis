@@ -25,7 +25,7 @@ class Trainset(InitTrain):
     
     def __init__(self, args):
         super(Trainset, self).__init__(args)
-        output_size = 2560
+        output_size = 512
         self.discriminator = model_base.ClassifierMLP(input_size=args.num_classes*output_size, output_size=2,
                         dropout=args.dropout, last=None).to(self.device)
         self.grl = utils.GradientReverseLayer()
@@ -139,19 +139,19 @@ class Trainset(InitTrain):
             for key in epoch_loss.keys():
                 logging.info('Train-Loss {}: {:.4f}'.format(key, epoch_loss[key]/num_iter))
             # log the best model according to the val accuracy
-        #    new_acc = self.test()
+            new_acc = self.test()
 
-            # last_acc_formatted = f"{new_acc:.3f}"
-            # wandb.log({"last_target_acc": float(last_acc_formatted)})
+            last_acc_formatted = f"{new_acc:.3f}"
+            wandb.log({"last_target_acc": float(last_acc_formatted)})
             
             
-            # if new_acc >= best_acc:
-            #     best_acc = new_acc
-            #     best_epoch = epoch
-            # logging.info("The best model epoch {}, val-acc {:.4f}".format(best_epoch, best_acc))
+            if new_acc >= best_acc:
+                best_acc = new_acc
+                best_epoch = epoch
+            logging.info("The best model epoch {}, val-acc {:.4f}".format(best_epoch, best_acc))
             
-            # best_acc_formatted = f"{best_acc:.3f}"
-            # wandb.log({"best_target_acc": float(best_acc_formatted)})
+            best_acc_formatted = f"{best_acc:.3f}"
+            wandb.log({"best_target_acc": float(best_acc_formatted)})
             
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
