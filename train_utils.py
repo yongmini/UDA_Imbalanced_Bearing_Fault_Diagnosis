@@ -6,36 +6,6 @@ import importlib
 from torch import optim
 from torch.utils.data.dataset import ConcatDataset
 import wandb
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-import numpy as np
-import prior 
-from sklearn.preprocessing import StandardScaler
-from scipy import signal
-import pandas as pd
-def  STFT(fl):
-    f, t, Zxx = signal.stft(fl, nperseg=128)
-    img = np.abs(Zxx) / len(Zxx)
-
-    return img
-
-def prepare_data(dataloader):
-    features = []
-    labels = []
-    for batch in dataloader:
-  
-        if len(batch) == 2:  # 데이터와 레이블만 포함하는 경우
-            data, label = batch
-        elif len(batch) > 2:  # 추가 데이터가 포함된 경우
-            data, label = batch[0], batch[1] 
-        data = data.permute(0, 2, 1)
-        features.extend(data.numpy())
-        labels.extend(label.numpy())
-    x,y= np.array(features), np.array(labels)
-    print(x.shape, y.shape)
-    x =np.apply_along_axis(STFT, 1, np.squeeze(x))
-    x=np.mean(x, axis=2).reshape(x.shape[0],x.shape[1],1)
-    return x, y
 
 
 class InitTrain(object):
