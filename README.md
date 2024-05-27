@@ -2,7 +2,8 @@
 
 ## Overview
 
-This repository contains code that applies UDA (Unsupervised Domain Adaptation) methodologies for fault diagnosis of rotating machinery.
+
+This repository includes code that applies UDA (Unsupervised Domain Adaptation) methodologies for fault diagnosis of rotating machinery in imbalanced situations.
 
 Please be aware that I have referred to two repositories, which are cited below.
 
@@ -16,7 +17,6 @@ If you want to specify the imbalance ratio for the training data of the target d
 - **CORAL** - Deep coral: Correlation alignment for deep domain adaptation. [Published in ECCV 2016](https://arxiv.org/abs/1607.01719) | [View Code](/models/CORAL.py)
 - **DANN** - Unsupervised domain adaptation by backpropagation. [Published in ICML 2015](http://proceedings.mlr.press/v37/ganin15.pdf) | [View Code](/models/DANN.py)
 - **DDTLN** - Deep discriminative transfer learning network for cross-machine fault diagnosis. [Published in Mechanical Systems and Signal Processing 2023](https://www.sciencedirect.com/science/article/pii/S0888327022009529) | [View Code](/models/DDTLN.py)
-
 
 ## Getting Started
 
