@@ -14,12 +14,9 @@ If you want to specify the imbalance ratio for the training data of the target d
 - **ACDANN** - Integrating expert knowledge with domain adaptation for unsupervised fault diagnosis. [Published in TIM 2021](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9612159) | [View Code](/models/ACDANN.py)
 - **CDAN** - Conditional adversarial domain adaptation. [Published in NIPS 2018](http://papers.nips.cc/paper/7436-conditional-adversarial-domain-adaptation) | [View Code](/models/CDAN.py) 
 - **CORAL** - Deep coral: Correlation alignment for deep domain adaptation. [Published in ECCV 2016](https://arxiv.org/abs/1607.01719) | [View Code](/models/CORAL.py)
-- **DAN** - Learning transferable features with deep adaptation networks. [Published in ICML 2015](http://ise.thss.tsinghua.edu.cn/~mlong/doc/deep-adaptation-networks-icml15.pdf) | [View Code](/models/DAN.py)
 - **DANN** - Unsupervised domain adaptation by backpropagation. [Published in ICML 2015](http://proceedings.mlr.press/v37/ganin15.pdf) | [View Code](/models/DANN.py)
 - **DDTLN** - Deep discriminative transfer learning network for cross-machine fault diagnosis. [Published in Mechanical Systems and Signal Processing 2023](https://www.sciencedirect.com/science/article/pii/S0888327022009529) | [View Code](/models/DDTLN.py)
 
-- **MFSAN** - Aligning domain-specific distribution and classifier for cross-domain classification from multiple sources. [Published in AAAI 2019](https://ojs.aaai.org/index.php/AAAI/article/view/4551) | [View Code](/models/MFSAN.py) 
-- **MSSA** - A multi-source information transfer learning method with subdomain adaptation for cross-domain fault diagnosis. [Published in Knowledge-Based Systems 2022](https://reader.elsevier.com/reader/sd/pii/S0950705122001927?token=03BD384CA5D6E0E7E029B23C739C629913DE8F8BB37F6331F7D233FB6C57599BFFC86609EE63BE2F9FC43871D96A2F61&originRegion=us-east-1&originCreation=20230324021230) | [View Code](/models/MSSA.py)
 
 ## Getting Started
 
@@ -60,12 +57,6 @@ Our repository supports several public datasets for fault diagnosis, with accomp
 #### Within-dataset Transfer
 For analyzing a specific dataset under different working conditions:
 1. Divide the dataset into separate folders named "condition_0", "condition_1", etc., each representing a unique operational condition.
-2. Within each "condition_?" folder, create subfolders (with custom names) for different fault categories containing the respective fault data.
-3. Ensure each 'condition_?' folder contains subfolders with identical names and numbers (indicating the same classes of faults).
-
-For example, for the CWRU dataset:
-   - Organize the dataset into folders based on motor speed (four speeds as four folders).
-   - Within each condition folder, categorize data into 9 subfolders for 9 fault classes, such as '7 mil Inner Race fault', '14 mil Inner Race fault', '7 mil Outer Race fault', etc., as detailed in Table XII of [this IEEE article](https://ieeexplore.ieee.org/abstract/document/9399341).
 
 Example folder structure for CWRU dataset:
 ```
@@ -95,11 +86,9 @@ Example: Transfer from CWRU operation condition 0 to condition 1.
 ```shell
 python train.py --model_name DAN --source CWRU_0 --target CWRU_1 --train_mode single_source --cuda_device 0
 ```
-
-#### Many-to-One Transfer
-Example: Transfer from CWRU operation condition 0 and condition 1 to condition 2.
+#### imbalanced setting
 ```shell
-python train.py --model_name MFSAN --source CWRU_0,CWRU_1 --target CWRU_2 --train_mode multi_source --cuda_device 0 
+python train.py --model_name CNN --source CWRU_0 --target CWRU_1 --train_mode single_source --cuda_device 0 --imba True
 ```
 
 🛠️ For more experimental settings, please modify the arguments in `opt.py`.

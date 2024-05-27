@@ -145,11 +145,10 @@ class InitTrain(object):
                 self.imbalance_ratio = {0:1, 1: 1, 2: 0.01, 3: 0.01, 4: 0.01, 5: 0.01, 6: 0.01, 7: 0.01, 8: 0.01, 9: 0.01}
                 wandb.log({"imba": self.imbalance_ratio})
             elif 'JNU' in args.target:
-                
                 self.imbalance_ratio = {0:1, 1: 0.05, 2: 0.05, 3: 0.05}
                 wandb.log({"imba": self.imbalance_ratio})
             elif 'CWRU' in args.target:
-                self.imbalance_ratio = {0:1, 1: 0.2, 2: 0.2, 3: 0.2, 4: 0.2, 5: 0.2, 6: 0.2, 7: 0.2, 8: 0.2, 9: 0.2}
+                self.imbalance_ratio = {0:1, 1: 0.2, 2: 0.2, 3: 0.2}
                 wandb.log({"imba": self.imbalance_ratio})
 
         else:
@@ -185,27 +184,7 @@ class InitTrain(object):
                                               num_workers=args.num_workers, drop_last=(False if x == 'val' else True),
                                               pin_memory=(True if self.device == 'cuda' else False))
                                               for x in dataset_keys}
-        
-        # 데이터 로드 (PyTorch dataloader 사용)
-        # train_features, train_labels = prepare_data(self.dataloaders[source])
-        # test_features, test_labels = prepare_data(self.dataloaders['train'])
-        
-        # train_features=np.squeeze(train_features)
-        # test_features=np.squeeze(test_features)
-        # train_features=pd.DataFrame(train_features)
-        # test_features=pd.DataFrame(test_features)
-        # scaler = StandardScaler()
-        # train_features = scaler.fit_transform(train_features)  # 트레이닝 데이터에 대해 fit과 transform 수행
-        # test_features = scaler.transform(test_features)  # 트레이닝 데이터로 학습된 스케일러를 사용하여 테스트 데이터 변환
 
-        # # 랜덤 포레스트 모델 초기화 및 학습
-        # rf = RandomForestClassifier(n_estimators=100, random_state=42)
-        # rf.fit(train_features, train_labels)
-
-        # # 검증 데이터에 대한 예측 및 성능 평가
-        # predictions = rf.predict(test_features)
-        # accuracy = accuracy_score(test_labels, predictions)
-        # print(f"Validation Accuracy: {accuracy}")
         
         self.iters = {x: iter(self.dataloaders[x]) for x in dataset_keys}
         

@@ -3,11 +3,6 @@ import numpy as np
 from torch import nn
 from torch.autograd import Function
 import torch.nn.functional as F
-from sklearn.manifold import TSNE
-import matplotlib.pyplot as plt
-import os
-import seaborn as sns
-
 
 def get_accuracy(preds, targets):
         assert preds.shape[0] == targets.shape[0]
@@ -245,92 +240,3 @@ class DomainAdversarialLoss(nn.Module):
         return loss, d_accuracy
 
 
-def visualize_tsne_and_confusion_matrix(features, all_labels, cm, save_dir,file_name):
-    # Perform t-SNE
-    tsne = TSNE(n_components=2, random_state=42)
-    transformed_features = tsne.fit_transform(features)
-
-    # Create a figure with two subplots
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 8))
-
-    # Visualize t-SNE
-    for label in np.unique(all_labels):
-        ax1.scatter(transformed_features[all_labels == label, 0], transformed_features[all_labels == label, 1], label=label)
-    ax1.set_title('t-SNE Visualization')
-    ax1.set_xlabel('t-SNE Component 1')
-    ax1.set_ylabel('t-SNE Component 2')
-    ax1.legend()
-
-    # Visualize confusion matrix
-    sns.heatmap(cm, annot=True, cmap='Blues', fmt='d', xticklabels=list(range(len(np.unique(all_labels)))), yticklabels=list(range(len(np.unique(all_labels)))), ax=ax2)
-    ax2.set_title('Confusion Matrix')
-    ax2.set_xlabel('Predicted Labels')
-    ax2.set_ylabel('True Labels')
-
-    # Save the combined plot
-    save_path = os.path.join(save_dir,file_name)
-    plt.tight_layout()
-    plt.savefig(save_path)
-    plt.close()
-    
-class I_Softmax(nn.Module):
-    def __init__(self, m, n, source_output1, source_label, device):
-        super().__init__()
-        self.device = device
-        self.m = torch.tensor([m]).to(self.device)
-        self.n = torch.tensor([n]).to(self.device)
-        self.source_output1 = source_output1
-        self.source_label = source_label
-        self.class_data = {}
-        self.class_labels = {}
-        self.data_set = []
-        self.label_set = []
-
-    def _combine(self):
-        for i in range(self.source_label.size()[0]):
-            label = self.source_label[i].item()
-            if label not in self.class_data:
-                self.class_data[label] = []
-                self.class_labels[label] = []
-            self.class_data[label].append(self.source_output1[i])
-            self.class_labels[label].append(label)
-
-        for label, data in self.class_data.items():
-            class_data_tensor = torch.stack(data)
-            class_label_tensor = torch.tensor(self.class_labels[label]).unsqueeze(1)
-
-            self.data_set.append(self._class_angle(class_data_tensor, class_label_tensor))
-            self.label_set.append(class_label_tensor)
-
-        data = torch.vstack(self.data_set)
-        label = torch.vstack(self.label_set)
-        return data.to(self.device), label.squeeze().to(self.device)
-    
-
-    def _class_angle(self, a, la):
-
-        if len(la) == 0:
-            return a
-        else:
-            index = la[0]
-        for i in range(len(a)):
-            c = a[i]
-            part1 = c[:index]
-            part2 = c[index + 1:]
-            if c[index] > 0:
-                val = c[index] / (self.m + 1e-5) - self.n
-            elif c[index] <= 0:
-                val = c[index] * (self.m + 1e-5) - self.n
-            if i == 0:
-                new_tensor = torch.concat((part1, val, part2))
-            else:
-                tensor = torch.concat((part1, val, part2), dim=0)
-                new_tensor = torch.vstack([new_tensor, tensor])
-
-        return new_tensor
-
-    def forward(self):
-        data, label = self._combine()
-        loss = F.nll_loss(F.log_softmax(data, dim=-1), label)
-        return data, label, loss
-    

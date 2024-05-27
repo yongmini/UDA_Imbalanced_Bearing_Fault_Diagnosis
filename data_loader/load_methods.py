@@ -15,7 +15,6 @@ def CWRU(item_path):
 
     return signal
 
-
 def JNU(item_path):
     fl = np.loadtxt(item_path)
     signal = fl.reshape(-1,1)

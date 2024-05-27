@@ -33,16 +33,6 @@ def train_test_split_(data_pd, test_size=0.2, num_classes=4, random_state=10):
     return train_pd,val_pd
 
 
-
-
-# def balance_data(data_pd):
-#     count = data_pd.value_counts(subset='labels')
-#     min_len = min(count) - 1
-#     df = pd.DataFrame(columns=('data', 'labels'))
-#     for i in count.keys():
-#         data_pd_tmp = data_pd[data_pd['labels'] == i].reset_index(drop=True)
-#         df = pd.concat([df, data_pd_tmp.loc[:min_len, ['data', 'labels']]], ignore_index=True)
-#     return df
         
 def balance_data(data_pd, random_state=10):
     count = data_pd['labels'].value_counts()
@@ -95,5 +85,4 @@ class dataset(Dataset):
         for i in self.labels:
             total[i] += 1
             
-        # for key in sorted(total.keys()):
-        #     print('Label {} has samples: {}'.format(key, total[key]))
+ 
