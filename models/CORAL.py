@@ -138,10 +138,7 @@ class Trainset(InitTrain):
 
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
-                
-        acc=self.test()
-        acc_formatted = f"{acc:.3f}"
-        wandb.log({"correct_target_acc": float(acc_formatted)})    
+
             
     def test(self):
         self.model.eval()

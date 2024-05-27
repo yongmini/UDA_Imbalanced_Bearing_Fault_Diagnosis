@@ -5,7 +5,7 @@ def parse_args():
  
 
     # basic parameters
-    parser.add_argument('--imba', type=bool, default=False, help='Save logs and trained model checkpoints')# str
+    parser.add_argument('--imba', type=bool, default=False, help='Sample imbalance setting')# str
     parser.add_argument('--model_name', type=str, default='CNN',
                         help='Name of the model (in ./models directory)')
     parser.add_argument('--Domain', type=str, default='exp')

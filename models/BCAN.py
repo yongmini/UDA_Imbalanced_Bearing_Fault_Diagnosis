@@ -1,5 +1,5 @@
 '''
-Paper: Long, M., Cao, Z., Wang, J. and Jordan, M.I., 2018. Conditional adversarial
+Base model: Long, M., Cao, Z., Wang, J. and Jordan, M.I., 2018. Conditional adversarial
     domain adaptation. Advances in neural information processing systems, 31.
 Reference code: https://github.com/thuml/Transfer-Learning-Library
 '''
@@ -30,7 +30,6 @@ class RandomizedMultiLinearMap(nn.Module):
         g = torch.mm(g, self.Rg.to(g.device))
         output = torch.mul(f, g) / np.sqrt(float(self.output_dim))
         return output
-
 
 class MultiLinearMap(nn.Module):
 
@@ -109,10 +108,8 @@ class ConditionalDomainAdversarialLoss(nn.Module):
                 balanced_g_s.append(g_s[selected_indices_s])
                 balanced_g_t.append(g_t[selected_indices_t])
              
-
         if len(balanced_f_s) == 0 or len(balanced_f_t) == 0 or len(balanced_g_s) == 0 or len(balanced_g_t) == 0:
             return f_s, f_t, g_s, g_t
-
 
         balanced_f_s = torch.cat(balanced_f_s, dim=0)
         balanced_f_t = torch.cat(balanced_f_t, dim=0)
@@ -227,7 +224,6 @@ class Trainset(InitTrain):
                 
                 epoch_loss['Source Classifier'] += loss_c
                 epoch_loss['Discriminator'] += local_dist
-   
 
                 # backward
                 loss.backward()
@@ -259,15 +255,6 @@ class Trainset(InitTrain):
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
                              
-            if self.args.tsne:
-                self.epoch = epoch
-                if epoch % 50 == 0:
-                    self.test_tsne()
-        acc=self.test()
-        acc_formatted = f"{acc:.3f}"
-        wandb.log({"correct_target_acc": float(acc_formatted)})   
-        
-     
     def test(self):
         self.model.eval()
         acc = 0.0

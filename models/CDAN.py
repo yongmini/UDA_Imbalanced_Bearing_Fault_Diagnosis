@@ -215,23 +215,12 @@ class Trainset(InitTrain):
             logging.info("The best model epoch {}, val-acc {:.4f}".format(best_epoch, best_acc))
             
             best_acc_formatted = f"{best_acc:.2f}"
-            wandb.log({"best_target_acc": float(best_acc_formatted)})
-    
-            
+            wandb.log({"best_target_acc": float(best_acc_formatted)})    
             
             
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
-                             
-            if self.args.tsne:
-                self.epoch = epoch
-                if epoch == 1 or epoch % 5 == 0:
-                    self.test_tsne()
-        acc=self.test()
-        acc_formatted = f"{acc:.3f}"
-        wandb.log({"correct_target_acc": float(acc_formatted)})   
-        
-     
+
             
     def test(self):
         self.model.eval()

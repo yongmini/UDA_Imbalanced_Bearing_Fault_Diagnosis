@@ -167,17 +167,6 @@ class Trainset(InitTrain):
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
              
-            if self.args.tsne:
-                self.epoch = epoch
-                if epoch == 1 or epoch % 5 == 0:
-                    self.test_tsne()
-                
-     
-        acc=self.test()
-        acc_formatted = f"{acc:.3f}"
-        wandb.log({"target_acc": float(acc_formatted)})    
-    
-
                 
         
     def test(self):
