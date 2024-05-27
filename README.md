@@ -99,7 +99,7 @@ We welcome feedback, inquiries, and suggestions to improve our work. If you enco
 
 
 ## Citation
-Your support in citing our project when used in your research is highly appreciated. It helps in the recognition and dissemination of our work. Please use the following citation format:
+
 ```latex
 @misc{TL-Bearing-Fault-Diagnosis,
     author = {Jinyuan Zhang},
