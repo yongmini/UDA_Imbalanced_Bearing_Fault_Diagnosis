@@ -13,7 +13,7 @@ def parse_args():
                         help='Source data, separated by "," (select specific conditions of the dataset with name_number, such as CWRU_0)')
     parser.add_argument('--target', type=str, default='JNU_1',
                         help='Target data (select specific conditions of the dataset with name_number, such as CWRU_0)')
-    parser.add_argument('--data_dir', type=str, default="/home/workspace/UDA_Bearing_Fault_Diagnosis/datasets",
+    parser.add_argument('--data_dir', type=str, default="/content/UDA_Bearing_Fault_Diagnosis/datasets",
                         help='Directory of the datasets')
     parser.add_argument('--train_mode', type=str, default='single_source',
                         choices=['single_source', 'source_combine', 'multi_source'],
