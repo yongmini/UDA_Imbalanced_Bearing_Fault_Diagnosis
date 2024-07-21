@@ -52,7 +52,7 @@ def parse_args():
     parser.add_argument('--dropout', type=float, default=0.2, help='Dropout layer coefficient')
     
     # save and load
-    parser.add_argument('--save', type=bool, default=False, help='Save logs and trained model checkpoints')
+    parser.add_argument('--save', type=bool, default=True, help='Save logs and trained model checkpoints')
     parser.add_argument('--load_path', type=str, default='',
                         help='Load trained model checkpoints from this path (for testing, not for resuming training)')
     parser.add_argument('--tsne', type=bool, default=False, help='tsne and confusion matrix plot')
