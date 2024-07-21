@@ -1,4 +1,4 @@
-='''
+'''
 Paper: Ganin, Y. and Lempitsky, V., 2015, June. Unsupervised domain adaptation by backpropagation.
     In International conference on machine learning (pp. 1180-1189). PMLR.
 Reference code: https://github.com/thuml/Transfer-Learning-Library
