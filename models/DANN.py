@@ -1,4 +1,4 @@
-'''
+='''
 Paper: Ganin, Y. and Lempitsky, V., 2015, June. Unsupervised domain adaptation by backpropagation.
     In International conference on machine learning (pp. 1180-1189). PMLR.
 Reference code: https://github.com/thuml/Transfer-Learning-Library
@@ -9,7 +9,6 @@ import logging
 from tqdm import tqdm
 import torch.nn.functional as F
 from collections import defaultdict
-import wandb
 import utils
 import model_base
 from train_utils import InitTrain
@@ -151,19 +150,14 @@ class Trainset(InitTrain):
                 
             #log the best model according to the val accuracy
             new_acc = self.test()
-            
-            last_acc_formatted = f"{new_acc:.3f}"
-            wandb.log({"last_target_acc": float(last_acc_formatted)})
-            
+             
             
             if new_acc >= best_acc:
                 best_acc = new_acc
                 best_epoch = epoch
             logging.info("The best model epoch {}, val-acc {:.4f}".format(best_epoch, best_acc))
             
-            best_acc_formatted = f"{best_acc:.3f}"
-            wandb.log({"best_target_acc": float(best_acc_formatted)})
-             
+         
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
              
