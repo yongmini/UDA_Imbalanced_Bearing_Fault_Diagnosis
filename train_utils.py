@@ -5,7 +5,7 @@ import logging
 import importlib
 from torch import optim
 from torch.utils.data.dataset import ConcatDataset
-import wandb
+
 
 
 class InitTrain(object):
@@ -107,19 +107,19 @@ class InitTrain(object):
 
         for key in self.datasets.keys():
             logging.info('Source set {} number of samples {}.'.format(key, len(self.datasets[key])))
-            wandb.log({f"Source Set {key} Size": len(self.datasets[key])})
+          #  wandb.log({f"Source Set {key} Size": len(self.datasets[key])})
             self.datasets[key].summary()
             
         if args.imba:
             if 'SEU' in args.target:
                 self.imbalance_ratio = {0:1, 1: 1, 2: 0.01, 3: 0.01, 4: 0.01, 5: 0.01, 6: 0.01, 7: 0.01, 8: 0.01, 9: 0.01}
-                wandb.log({"imba": self.imbalance_ratio})
+             #   wandb.log({"imba": self.imbalance_ratio})
             elif 'JNU' in args.target:
                 self.imbalance_ratio = {0:1, 1: 0.05, 2: 0.05, 3: 0.05}
-                wandb.log({"imba": self.imbalance_ratio})
+            #    wandb.log({"imba": self.imbalance_ratio})
             elif 'CWRU' in args.target:
                 self.imbalance_ratio = {0:1, 1: 0.2, 2: 0.2, 3: 0.2}
-                wandb.log({"imba": self.imbalance_ratio})
+           #     wandb.log({"imba": self.imbalance_ratio})
 
         else:
             self.imbalance_ratio = None
@@ -134,10 +134,10 @@ class InitTrain(object):
 
     
         logging.info('target training set number of samples {}.'.format(len(self.datasets['train'])))
-        wandb.log({"target training Set Size": len(self.datasets['train'])})
+      #  wandb.log({"target training Set Size": len(self.datasets['train'])})
         self.datasets['train'].summary()
         logging.info('target validation set number of samples {}.'.format(len(self.datasets['val'])))
-        wandb.log({"Validation Set Size": len(self.datasets['val'])})
+       # wandb.log({"Validation Set Size": len(self.datasets['val'])})
         self.datasets['val'].summary()
         
         dataset_keys = args.source_name + ['train', 'val']
