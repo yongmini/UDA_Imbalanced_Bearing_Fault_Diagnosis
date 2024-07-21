@@ -5,7 +5,6 @@ import torch
 import logging
 import importlib
 from datetime import datetime
-import wandb
 from opt import parse_args
 import numpy as np
 
@@ -60,10 +59,7 @@ if __name__ == '__main__':
         torch.cuda.manual_seed_all(args.random_state)
         torch.backends.cudnn.deterministic = True
         
-    wandb.init(project=args.Domain, entity='dsym2894', config=args,name=args.model_name)
-    config = wandb.config  # 
-    wandb.config.update(args)
-    
+
     args.source_name = [x.strip() for x in list(args.source.split(','))]
     if '' in args.source_name:
         args.source_name.remove('')
