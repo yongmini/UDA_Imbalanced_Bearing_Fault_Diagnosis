@@ -3,7 +3,6 @@ import logging
 from tqdm import tqdm
 import torch.nn.functional as F
 from collections import defaultdict
-import wandb
 import utils
 import model_base
 from train_utils import InitTrain
@@ -79,7 +78,6 @@ class Trainset(InitTrain):
             for key in epoch_acc.keys():
                 avg_acc = epoch_acc[key] / num_iter
                 logging.info('Train-Acc {}: {:.4f}'.format(key, avg_acc))
-                wandb.log({f'Train-Acc {key}': avg_acc}, commit=False)  # Log to wandb
             for key in epoch_loss.keys():
                 logging.info('Train-Loss {}: {:.4f}'.format(key, epoch_loss[key]/num_iter))
                     
@@ -87,18 +85,11 @@ class Trainset(InitTrain):
         
             new_acc = self.test()
         
-            
-            last_acc_formatted = f"{new_acc:.3f}"
-            wandb.log({"last_target_acc": float(last_acc_formatted)})
-            
             if new_acc >= best_acc:
                 best_acc = new_acc
                 best_epoch = epoch
             logging.info("The best model epoch {}, val-acc {:.4f}".format(best_epoch, best_acc))
-            
-            best_acc_formatted = f"{best_acc:.3f}"
-            wandb.log({"best_target_acc": float(best_acc_formatted)})
-            
+        
 
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
