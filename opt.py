@@ -22,7 +22,7 @@ def parse_args():
                         help='Allocate the device to use only one GPU ('' means using cpu)')
     parser.add_argument('--save_dir', type=str, default='./ckpt',
                         help='Directory to save logs and model checkpoints')
-    parser.add_argument('--max_epoch', type=int, default=50,
+    parser.add_argument('--max_epoch', type=int, default=10,
                         help='Number of epochs')
     parser.add_argument('--batch_size', type=int, default=32,
                         help='Batch size')
