@@ -17,42 +17,6 @@ import numpy as np
     
  
 
-def cost_sensitive_loss(input, target, M):
-    if input.size(0) != target.size(0):
-        raise ValueError('Expected input batch_size ({}) to match target batch_size ({}).'
-                         .format(input.size(0), target.size(0)))
-    device = input.device
-    M = M.to(device)
-    return (M[target, :]*input.float()).sum(axis=-1)
-    # return torch.diag(torch.matmul(input, M[:, target]))
-
-class CostSensitiveLoss(nn.Module):
-    def __init__(self,  n_classes, exp=1, normalization='softmax', reduction='mean'):
-        super(CostSensitiveLoss, self).__init__()
-        if normalization == 'softmax':
-            self.normalization = nn.Softmax(dim=1)
-        elif normalization == 'sigmoid':
-            self.normalization = nn.Sigmoid()
-        else:
-            self.normalization = None
-        self.reduction = reduction
-        x = np.abs(np.arange(n_classes, dtype=np.float32))
-        M = np.abs((x[:, np.newaxis] - x[np.newaxis, :])) ** exp
-        M /= M.max()
-        self.M = torch.from_numpy(M)
-
-    def forward(self, logits, target):
-        preds = self.normalization(logits)
-        loss = cost_sensitive_loss(preds, target, self.M)
-        if self.reduction == 'none':
-            return loss
-        elif self.reduction == 'mean':
-            return loss.mean()
-        elif self.reduction == 'sum':
-            return loss.sum()
-        else:
-            raise ValueError('`reduction` must be one of \'none\', \'mean\', or \'sum\'.')
-
    
 class Trainset(InitTrain):
     
