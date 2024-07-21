@@ -6,12 +6,12 @@ def parse_args():
 
     # basic parameters
     parser.add_argument('--imba', type=bool, default=False, help='Sample imbalance setting')# str
-    parser.add_argument('--model_name', type=str, default='CNN',
+    parser.add_argument('--model_name', type=str, default='DANN',
                         help='Name of the model (in ./models directory)')
     parser.add_argument('--Domain', type=str, default='exp')
-    parser.add_argument('--source', type=str, default='CWRU_0',
+    parser.add_argument('--source', type=str, default='JNU_0',
                         help='Source data, separated by "," (select specific conditions of the dataset with name_number, such as CWRU_0)')
-    parser.add_argument('--target', type=str, default='CWRU_1',
+    parser.add_argument('--target', type=str, default='JNU_1',
                         help='Target data (select specific conditions of the dataset with name_number, such as CWRU_0)')
     parser.add_argument('--data_dir', type=str, default="/home/workspace/UDA_Bearing_Fault_Diagnosis/datasets",
                         help='Directory of the datasets')
