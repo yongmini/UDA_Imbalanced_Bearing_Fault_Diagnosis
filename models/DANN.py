@@ -46,7 +46,6 @@ class Trainset(InitTrain):
         
     def train(self):
         args = self.args
-        criterion = CostSensitiveLoss(4)
         if args.train_mode == 'single_source':
             src = args.source_name[0]
         elif args.train_mode == 'source_combine':
