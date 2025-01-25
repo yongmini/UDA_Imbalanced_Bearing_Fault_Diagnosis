@@ -13,7 +13,6 @@ If you want to specify the imbalance ratio for the training data of the target d
 
 ### Domain Adaptation
 - **ACDANN** - Integrating expert knowledge with domain adaptation for unsupervised fault diagnosis. [Published in TIM 2021](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9612159) | [View Code](/models/ACDANN.py)
-- **CDAN** - Conditional adversarial domain adaptation. [Published in NIPS 2018](http://papers.nips.cc/paper/7436-conditional-adversarial-domain-adaptation) | [View Code](/models/CDAN.py) 
 - **DANN** - Unsupervised domain adaptation by backpropagation. [Published in ICML 2015](http://proceedings.mlr.press/v37/ganin15.pdf) | [View Code](/models/DANN.py)
 - **DDTLN** - Deep discriminative transfer learning network for cross-machine fault diagnosis. [Published in Mechanical Systems and Signal Processing 2023](https://www.sciencedirect.com/science/article/pii/S0888327022009529) | [View Code](/models/DDTLN.py)
 
