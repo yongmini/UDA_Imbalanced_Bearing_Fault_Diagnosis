@@ -14,7 +14,6 @@ If you want to specify the imbalance ratio for the training data of the target d
 ### Domain Adaptation
 - **ACDANN** - Integrating expert knowledge with domain adaptation for unsupervised fault diagnosis. [Published in TIM 2021](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9612159) | [View Code](/models/ACDANN.py)
 - **CDAN** - Conditional adversarial domain adaptation. [Published in NIPS 2018](http://papers.nips.cc/paper/7436-conditional-adversarial-domain-adaptation) | [View Code](/models/CDAN.py) 
-- **CORAL** - Deep coral: Correlation alignment for deep domain adaptation. [Published in ECCV 2016](https://arxiv.org/abs/1607.01719) | [View Code](/models/CORAL.py)
 - **DANN** - Unsupervised domain adaptation by backpropagation. [Published in ICML 2015](http://proceedings.mlr.press/v37/ganin15.pdf) | [View Code](/models/DANN.py)
 - **DDTLN** - Deep discriminative transfer learning network for cross-machine fault diagnosis. [Published in Mechanical Systems and Signal Processing 2023](https://www.sciencedirect.com/science/article/pii/S0888327022009529) | [View Code](/models/DDTLN.py)
 
@@ -28,7 +27,6 @@ If you want to specify the imbalance ratio for the training data of the target d
 - Scipy 1.2.1
 - pytorch >= 1.11.0
 - torchvision >= 0.40
-
 
 ### Repository Access
 You can access our repository either by direct download or using git clone. Here’s how:
@@ -46,12 +44,10 @@ git clone https://github.com/yongmini/UDA_Bearing_Fault_Diagnosis.git
 
 ## Accessing Datasets
 ### Supported datasets
-Our repository supports several public datasets for fault diagnosis, with accompanying loading code. These include:
-- **[CWRU](https://engineering.case.edu/bearingdatacenter)** - Case Western Reserve University dataset.
+Our repository supports public datasets for fault diagnosis, with accompanying loading code. These include:
 - **[JNU Bearing Dataset](http://mad-net.org:8765/explore.html?t=0.5831516555847212.)** -Jiangnan University dataset
 
 ### Setting Up Dataset Directory
-- Create a folder named "datasets" in the root directory of the cloned repository.
 - Download the desired datasets and place them into this "datasets" folder, follow the steps below:
 
 #### Within-dataset Transfer
@@ -82,13 +78,13 @@ Example folder structure for CWRU dataset:
 Train models using data from the same dataset but different operational conditions.
 
 #### One-to-One Transfer
-Example: Transfer from CWRU operation condition 0 to condition 1.
+Example: Transfer from JNU operation condition 0 to condition 1.
 ```shell
-python train.py --model_name DAN --source CWRU_0 --target CWRU_1 --train_mode single_source --cuda_device 0
+python train.py --model_name ACDAN --source JNU_0 --target JNU_1 
 ```
 #### imbalanced setting
 ```shell
-python train.py --model_name CNN --source CWRU_0 --target CWRU_1 --train_mode single_source --cuda_device 0 --imba True
+python train.py --model_name ACDAN --source JNU_0 --target JNU_1 
 ```
 
 🛠️ For more experimental settings, please modify the arguments in `opt.py`.
